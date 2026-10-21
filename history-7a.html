@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#9d3b31">
+<title>初一历史 · 七年级上册记忆卡</title>
+<style>
+  :root {
+    --paper: #f6f1e7;
+    --card: #fffdf7;
+    --ink: #33302a;
+    --muted: #8a8272;
+    --red: #9d3b31;
+    --blue: #31536b;
+    --gold: #b8935a;
+    --green: #7d8f4e;
+    --line: #e5dcc9;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    padding-bottom: 88px;
+  }
+  h1, h2, h3, .serif { font-family: "Songti SC", "STSong", "SimSun", Georgia, serif; }
+
+  header {
+    background: linear-gradient(160deg, #8a2f26, var(--red) 55%, #a95548);
+    color: #fdf6ec;
+    text-align: center;
+    padding: 34px 18px 26px;
+    border-bottom: 4px solid var(--gold);
+  }
+  header .seal {
+    display: inline-block;
+    border: 2px solid rgba(253,246,236,.75);
+    border-radius: 10px;
+    padding: 14px 26px;
+    font-size: 26px;
+    letter-spacing: 8px;
+    font-weight: 700;
+  }
+  header .sub { margin-top: 10px; font-size: 13px; opacity: .85; letter-spacing: 2px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex;
+    background: rgba(246,241,231,.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav button {
+    flex: 1 0 auto;
+    border: none; background: none;
+    font: inherit; font-size: 15px;
+    padding: 13px 14px;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  nav button.on { color: var(--red); border-bottom-color: var(--red); font-weight: 600; }
+
+  main { max-width: 680px; margin: 0 auto; padding: 18px 14px 30px; }
+  .page { display: none; }
+  .page.on { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .tip {
+    background: #f0e8d6;
+    border: 1px dashed var(--gold);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #6d5f42;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- 时间轴 ---------- */
+  .era-title {
+    display: flex; align-items: center; gap: 10px;
+    margin: 26px 0 12px;
+    font-size: 17px; font-weight: 700;
+  }
+  .era-title .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .era-title .tag { font-size: 11px; color: #fff; border-radius: 6px; padding: 2px 8px; letter-spacing: 1px; }
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--line);
+  }
+  .node { position: relative; margin-bottom: 12px; }
+  .node::before {
+    content: ""; position: absolute; left: -25px; top: 16px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--paper); border: 3px solid var(--dotc, var(--red));
+  }
+  .node-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(90,70,40,.08);
+  }
+  .node-head {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+  }
+  .node-head .date {
+    font-size: 12px; font-weight: 700; white-space: nowrap;
+    color: var(--dotc, var(--red));
+    min-width: 92px;
+    font-family: Georgia, serif;
+  }
+  .node-head .t { font-weight: 600; font-size: 15.5px; }
+  .node-head .arrow { margin-left: auto; color: var(--muted); font-size: 12px; transition: transform .2s; }
+  .node.open .arrow { transform: rotate(90deg); }
+  .node-body { display: none; padding: 2px 14px 13px; border-top: 1px dashed var(--line); }
+  .node.open .node-body { display: block; }
+  .node-body li {
+    list-style: none;
+    font-size: 14px;
+    padding: 4px 0 4px 18px;
+    position: relative;
+    color: #4a453b;
+  }
+  .node-body li::before {
+    content: "·"; position: absolute; left: 6px;
+    color: var(--dotc, var(--red)); font-weight: 700;
+  }
+  .node-body .kw {
+    display: inline-block;
+    background: rgba(157,59,49,.08);
+    color: var(--red);
+    border-radius: 5px;
+    padding: 0 6px;
+    font-size: 13px;
+    margin: 2px 0;
+  }
+
+  /* ---------- 口诀 ---------- */
+  .rhyme {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--red);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .rhyme h3 { font-size: 15px; color: var(--red); margin-bottom: 6px; }
+  .rhyme .verse {
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    font-size: 16.5px;
+    letter-spacing: 1px;
+    color: var(--ink);
+    white-space: pre-line;
+  }
+  .rhyme .note { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  table.num { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card); border-radius: 10px; overflow: hidden; }
+  table.num th, table.num td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; }
+  table.num th { background: #f0e8d6; font-size: 13px; color: #6d5f42; }
+  table.num td.d { font-family: Georgia, serif; font-weight: 700; color: var(--red); white-space: nowrap; }
+
+  /* ---------- 翻转卡 ---------- */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 480px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  .flip { perspective: 800px; height: 118px; cursor: pointer; }
+  .flip .inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .35s;
+    transform-style: preserve-3d;
+  }
+  .flip.flipped .inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 8px; text-align: center;
+  }
+  .face.front {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--c, var(--red));
+  }
+  .face.front .name { font-family: "Songti SC", serif; font-size: 19px; font-weight: 700; }
+  .face.front .role { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .face.front .hint { font-size: 10px; color: #c4bba6; margin-top: 6px; }
+  .face.back {
+    background: linear-gradient(150deg, var(--c, var(--red)), color-mix(in srgb, var(--c, var(--red)) 72%, black));
+    color: #fdf6ec;
+    transform: rotateY(180deg);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  .face.back .tag { font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+  .face.back .more { margin-top: 4px; opacity: .92; }
+
+  /* ---------- 丝路 ---------- */
+  .route { display: flex; flex-direction: column; gap: 0; align-items: center; }
+  .stop {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 18px;
+    font-family: "Songti SC", serif; font-size: 16px; font-weight: 600;
+    text-align: center; width: 100%; max-width: 300px;
+  }
+  .stop small { display: block; font-family: -apple-system, sans-serif; font-weight: 400; font-size: 11.5px; color: var(--muted); }
+  .arrow-down { color: var(--gold); font-size: 18px; line-height: 1.4; text-align: center; }
+  .trade { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+  .trade .box { border-radius: 10px; padding: 12px 14px; font-size: 13.5px; }
+  .trade .out { background: rgba(125,143,78,.12); border: 1px solid rgba(125,143,78,.4); }
+  .trade .in { background: rgba(157,59,49,.08); border: 1px solid rgba(157,59,49,.35); }
+  .trade h4 { font-size: 13.5px; margin-bottom: 4px; }
+  .trade .out h4 { color: #5c6e33; }
+  .trade .in h4 { color: var(--red); }
+
+  /* ---------- 方法 ---------- */
+  .method {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
+  }
+  .method h3 { font-size: 15.5px; color: var(--red); margin-bottom: 6px; }
+  .method p { font-size: 14px; color: #4a453b; }
+  .method .step { font-weight: 700; }
+
+  footer {
+    text-align: center; padding: 20px 16px 26px;
+    font-size: 12px; color: var(--muted);
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="seal serif">华夏·溯源</div>
+  <div class="sub">初一历史 · 七年级上册 · 统编版 · 睡前刷一刷</div>
+</header>
+
+<nav id="tabs">
+  <button class="on" data-page="timeline">🕰 时间轴</button>
+  <button data-page="rhyme">📜 口诀</button>
+  <button data-page="people">🏷 人物卡</button>
+  <button data-page="silk">🐫 丝绸之路</button>
+  <button data-page="howto">💡 怎么用</button>
+</nav>
+
+<main>
+  <!-- ============ 时间轴 ============ -->
+  <section class="page on" id="page-timeline">
+    <div class="tip">👆 点开每个节点查看考点要点。先从头到尾顺一遍，再让合上书，从"北京人"讲到"北魏孝文帝"。</div>
+    <div id="timeline-box"></div>
+  </section>
+
+  <!-- ============ 口诀 ============ -->
+  <section class="page" id="page-rhyme">
+    <div class="tip">口诀先读顺、再抄一遍，比死背快得多。</div>
+
+    <div class="rhyme">
+      <h3>① 朝代歌（七上就用到前四句半）</h3>
+      <div class="verse">夏商与西周，东周分两段；
+春秋和战国，一统秦两汉；
+三分魏蜀吴，二晋前后延；
+南北朝并立……</div>
+      <div class="note">七上考到"南北朝"为止。背熟它，选择题里的先后顺序就是送分题。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>② 战国七雄（方位）</h3>
+      <div class="verse">齐楚秦燕赵魏韩，
+东南西北到中间。</div>
+      <div class="note">齐在东、楚在南、秦在西、燕在北，赵魏韩夹在中间。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>③ 商鞅变法（前 356 年）</h3>
+      <div class="verse">立县制，奖军功；
+废井田，奖耕织。</div>
+      <div class="note">一句话记作用：秦国国力大增，军队战斗力提高，为秦统一全国奠定基础。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>④ 汉武帝巩固大一统</h3>
+      <div class="verse">政治：推恩令，设刺史；
+思想：尊儒术，办太学；
+经济：盐铁官营铸五铢；
+军事：卫青霍去病，漠北破匈奴。</div>
+      <div class="note">大题最爱考！四个角度：政治、思想、经济、军事，各记一个关键词。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑤ 北魏孝文帝改革</h3>
+      <div class="verse">迁都洛阳（494 年），
+说汉语、穿汉服、改汉姓、通婚姻。</div>
+      <div class="note">记作用：促进民族交融，增强北魏实力。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑥ 必背数字表（考场上值 10 分）</h3>
+      <table class="num">
+        <tr><th>年份</th><th>事件</th><th>一句话记</th></tr>
+        <tr><td class="d">约前2070</td><td>夏朝建立</td><td>禹——第一个王朝</td></tr>
+        <tr><td class="d">前1046</td><td>牧野之战</td><td>武王伐纣，西周建立</td></tr>
+        <tr><td class="d">前356</td><td>商鞅变法</td><td>秦孝公支持</td></tr>
+        <tr><td class="d">前221</td><td>秦统一</td><td>嬴政——第一个统一多民族封建国家</td></tr>
+        <tr><td class="d">前209</td><td>大泽乡起义</td><td>陈胜吴广——第一次农民大起义</td></tr>
+        <tr><td class="d">前138</td><td>张骞第一次出使西域</td><td>联合大月氏</td></tr>
+        <tr><td class="d">前60</td><td>西域都护府</td><td>新疆正式归属中央</td></tr>
+        <tr><td class="d">105年</td><td>蔡伦改进造纸术</td><td>蔡侯纸</td></tr>
+        <tr><td class="d">200年</td><td>官渡之战</td><td>曹操胜袁绍，统一北方</td></tr>
+        <tr><td class="d">208年</td><td>赤壁之战</td><td>孙刘胜曹操，三国鼎立基础</td></tr>
+        <tr><td class="d">494年</td><td>迁都洛阳</td><td>孝文帝改革</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 人物卡 ============ -->
+  <section class="page" id="page-people">
+    <div class="tip">👇 先看名字猜标签，点卡片翻面对答案。全对的卡就跳过，只刷翻错的。</div>
+    <div id="people-box"></div>
+  </section>
+
+  <!-- ============ 丝绸之路 ============ -->
+  <section class="page" id="page-silk">
+    <div class="tip">张骞两次出使西域（前138、前119）为它奠基；前60年西域都护府设立，保障畅通。</div>
+    <div class="route">
+      <div class="stop">长 安<small>出发点（今西安）</small></div>
+      <div class="arrow-down">↓</div>
+      <div class="stop">河西走廊<small>武威、张掖、酒泉、敦煌</small></div>
+      <div class="arrow-down">↓</div>
+      <div class="stop">今新疆地区<small>出玉门关、阳关，分南北道</small></div>
+      <div class="arrow-down">↓</div>
+      <div class="stop">中亚、西亚<small>葱岭以西，安息（波斯）</small></div>
+      <div class="arrow-down">↓</div>
+      <div class="stop">欧 洲<small>大秦（罗马帝国）</small></div>
+    </div>
+    <div class="trade">
+      <div class="box out">
+        <h4>汉朝输出 →</h4>
+        丝绸、漆器、铁器、开渠和铸铁技术
+      </div>
+      <div class="box in">
+        <h4>← 西方输入</h4>
+        汗血马、葡萄、石榴、核桃、苜蓿，佛教、乐器与歌舞
+      </div>
+    </div>
+    <div class="rhyme" style="margin-top:18px">
+      <h3>答题金句（背这两句）</h3>
+      <div class="verse">丝绸之路是古代东西方往来的大动脉，
+促进了中国同其他国家和地区的贸易与文化交流。</div>
+      <div class="note">"大动脉 + 促进交流"，大题答到这两点基本就拿满了。</div>
+    </div>
+  </section>
+
+  <!-- ============ 怎么用 ============ -->
+  <section class="page" id="page-howto">
+    <div class="method">
+      <h3>🌙 每晚 10 分钟：小老师法</h3>
+      <p><span class="step">①</span> 打开时间轴，从头顺一遍（1 分钟）；<br>
+      <span class="step">②</span> 合上手机，把今天历史课学的讲给爸妈听（5 分钟）；<br>
+      <span class="step">③</span> 卡壳的地方，点开对应节点只看那一个（4 分钟）。</p>
+    </div>
+    <div class="method">
+      <h3>🃏 碎片时间：刷人物卡</h3>
+      <p>排队、坐车、课间，翻两轮人物卡。翻错的第二天再刷一遍——只跟"没记住的"较劲，不要从头背。</p>
+    </div>
+    <div class="method">
+      <h3>📅 周末 20 分钟：整体过轴</h3>
+      <p>把时间轴从"元谋人"到"孝文帝"完整讲一遍给家人听。能顺下来，这一册的骨架就稳了；哪个朝代讲不顺，就说明那里要补。</p>
+    </div>
+    <div class="method">
+      <h3>✍️ 考试小提醒</h3>
+      <p>历史大题是<b>踩点给分</b>：记"关键词"不背整段（分封制→巩固统治｜丝路→东西方交流｜孝文帝→民族交融）。看到"作用/意义"题，先想<b>政治、经济、思想、军事</b>四个角度。</p>
+    </div>
+    <div class="tip" style="margin-top:4px">📱 建议用 Safari 打开后「分享 → 添加到主屏幕」，像 App 一样点开就刷。</div>
+  </section>
+</main>
+
+<footer>
+  统编版《中国历史》七年级上册 · 配合"睡前小老师法"使用<br>
+  内容供复习参考，以课本和老师讲授为准
+</footer>
+
+<script>
+/* ================= 时间轴数据 ================= */
+var ERAS = [
+  { name: "史前时期 · 原始社会", tag: "第一单元", color: "#7d8f4e", nodes: [
+    { date: "约170万年前", title: "元谋人", pts: ["我国境内目前已确认的<b>最早的古人类</b>", "能制造工具（打制石器），知道使用火"] },
+    { date: "约70万–20万年前", title: "北京人", pts: ["<b>直立行走</b>，使用打制石器", "使用<b>天然火</b>，保存火种", "过群居生活；头盖骨化石发现于周口店"] },
+    { date: "约3万年前", title: "山顶洞人", pts: ["掌握<b>磨光和钻孔</b>技术", "用骨针缝制衣服，懂得爱美"] },
+    { date: "约7000年前", title: "河姆渡人", pts: ["<b>长江流域</b>（浙江余姚）", "种植<b>水稻</b>（世界最早之一）", "<b>干栏式建筑</b>；使用骨耜"] },
+    { date: "约6000年前", title: "半坡居民", pts: ["<b>黄河流域</b>（陕西西安）", "种植<b>粟</b>", "<b>半地穴式</b>房屋；制作彩陶（人面鱼纹盆）"] },
+    { date: "约5300–4300年前", title: "良渚古城 · 陶寺都城", pts: ["良渚（长江下游）：玉琮、玉璧，出现早期国家雏形", "陶寺（黄河流域）：都城、礼制萌芽"] },
+    { date: "相传四五千年", title: "炎黄传说", pts: ["阪泉之战→炎黄联盟；涿鹿之战败蚩尤→形成<b>华夏族</b>", "炎帝神农氏尝百草、教耕作；黄帝建宫室", "海外华人自称为「<b>炎黄子孙</b>」"] },
+    { date: "尧舜禹时期", title: "禅让制", pts: ["将部落联盟首领之位<b>传给贤德之人</b>", "尧→舜→禹；大禹治水，三过家门而不入"] }
+  ]},
+  { name: "夏商周 · 早期国家与社会变革", tag: "第二单元", color: "#b8935a", nodes: [
+    { date: "约前2070", title: "夏朝建立", pts: ["<b>禹</b>建立——中国历史上<b>第一个王朝</b>", "启继位：<b>世袭制</b>代替禅让制（公天下→家天下）", "二里头遗址（可能是夏都）"] },
+    { date: "约前1600", title: "商朝", pts: ["汤灭夏建商；盘庚迁殷（殷墟）", "<b>甲骨文</b>：我国已知最早、最成熟的文字", "青铜器：后母戊鼎（迄今最重）、四羊方尊"] },
+    { date: "前1046", title: "西周建立", pts: ["<b>牧野之战</b>，武王伐纣，定都镐京", "<b>分封制</b>：分封宗亲和功臣为诸侯", "作用：保证周朝对地方的控制，稳定政局、扩大疆土"] },
+    { date: "前770", title: "东周 · 春秋争霸", pts: ["平王东迁洛邑，王室衰微", "齐桓公首霸（管仲改革、<b>尊王攘夷</b>）", "晋文公、楚庄王（问鼎中原）；勾践卧薪尝胆"] },
+    { date: "前475", title: "战国七雄", pts: ["三家分晋、田氏代齐", "七雄口诀：<span class='kw'>齐楚秦燕赵魏韩，东南西北到中间</span>", "桂陵、马陵之战；<b>长平之战</b>（赵括纸上谈兵）"] },
+    { date: "前356", title: "商鞅变法", pts: ["秦孝公任用商鞅", "政治：确立<b>县制</b>、改革户籍、<b>奖励军功</b>", "经济：废除井田制、<b>奖励耕织</b>", "作用：秦军战斗力大增、国力强盛，为统一<b>奠定基础</b>"] },
+    { date: "前256", title: "都江堰", pts: ["秦国蜀郡郡守<b>李冰</b>主持，建于岷江", "防洪、灌溉、水运多功能", "成都平原成为「<b>天府之国</b>」"] },
+    { date: "春秋战国", title: "百家争鸣", pts: ["中国古代第一次思想文化发展的高峰", "见「人物卡」页，一一对应记标签"] }
+  ]},
+  { name: "秦汉 · 统一多民族国家的建立和巩固", tag: "第三单元", color: "#9d3b31", nodes: [
+    { date: "前221", title: "秦统一六国", pts: ["<b>嬴政</b>建立秦朝——我国历史上第一个<b>统一多民族封建国家</b>", "政治：皇帝制度、中央三公、地方<b>郡县制</b>", "统一文字（小篆）、货币（半两钱）、度量衡、车轨", "北击匈奴修长城（临洮→辽东）；南凿<b>灵渠</b>"] },
+    { date: "前209", title: "陈胜吴广起义", pts: ["大泽乡起义，「王侯将相宁有种乎」", "中国历史上<b>第一次农民大起义</b>", "秦的暴政是根源：赋税重、徭役繁、刑法严、焚书坑儒"] },
+    { date: "前202", title: "西汉建立 · 文景之治", pts: ["<b>刘邦</b>（汉高祖）定都长安", "汉初<b>休养生息</b>政策", "文帝景帝：重视农业、以德化民、勤俭治国→「文景之治」"] },
+    { date: "前141–前87", title: "汉武帝巩固大一统", pts: ["政治：<b>推恩令</b>（主父偃）、设刺史", "思想：<b>罢黜百家，尊崇儒术</b>（董仲舒）、设太学", "经济：盐铁官营、统一铸<b>五铢钱</b>", "军事：<b>卫青、霍去病</b>北击匈奴（漠北战役）"] },
+    { date: "前138 / 前119", title: "张骞通西域", pts: ["两次出使西域", "「<b>凿空</b>」：了解西域、建立友好交往", "为<b>丝绸之路</b>的开通奠定基础"] },
+    { date: "前60", title: "西域都护府", pts: ["西汉设立西域都护", "标志今<b>新疆地区正式归属中央政权</b>管辖"] },
+    { date: "105年", title: "蔡伦改进造纸术", pts: ["东汉蔡伦改进造纸工艺（「蔡侯纸」）", "造纸术世界传播，<b>便利典籍保存与文化传播</b>"] },
+    { date: "25年", title: "东汉 · 光武中兴", pts: ["<b>刘秀</b>（光武帝）定都洛阳", "中后期：<b>外戚与宦官交替专权</b>", "184年张角领导<b>黄巾起义</b>"] },
+    { date: "东汉", title: "医学与史学", pts: ["<b>张仲景</b>《伤寒杂病论》——「医圣」", "<b>华佗</b>：麻沸散、五禽戏", "<b>司马迁</b>《史记》——第一部<b>纪传体通史</b>（黄帝→汉武帝）", "道教兴起于本土；佛教经丝绸之路传入"] }
+  ]},
+  { name: "三国两晋南北朝 · 政权分立与民族交融", tag: "第四单元", color: "#31536b", nodes: [
+    { date: "200 / 208", title: "官渡之战 · 赤壁之战", pts: ["<b>官渡</b>：曹操胜袁绍——为统一北方奠定基础", "<b>赤壁</b>：孙刘联军胜曹操——为<b>三国鼎立</b>奠定基础", "两战都是「以少胜多」经典战役"] },
+    { date: "220–280", title: "三国鼎立", pts: ["220年 <b>曹丕</b>建魏（洛阳）", "221年 <b>刘备</b>建蜀（成都）", "229年 <b>孙权</b>建吴（建业）"] },
+    { date: "266–316", title: "西晋短暂统一", pts: ["司马炎代魏建晋；280年统一全国", "<b>八王之乱</b>→西晋衰落→北方人口大量南迁", "北方游牧民族内迁（匈奴、鲜卑、羯、氐、羌）"] },
+    { date: "317–420", title: "东晋 · 江南开发", pts: ["司马睿建东晋，都<b>建康</b>（今南京）", "383年<b>淝水之战</b>：东晋胜前秦（以少胜多）", "<b>江南地区得到开发</b>：南迁人口带来劳动力和先进技术"] },
+    { date: "420–589", title: "南朝", pts: ["宋、齐、梁、陈相继更替，都城建康"] },
+    { date: "439–581", title: "北朝 · 孝文帝改革", pts: ["北魏孝文帝：<b>494年迁都洛阳</b>", "说汉语、穿汉服、<b>改汉姓</b>、通婚姻", "意义：促进<b>民族交融</b>，增强北魏实力"] },
+    { date: "魏晋南北朝", title: "科技与文化", pts: ["<b>祖冲之</b>：圆周率精确到小数点后<b>第七位</b>，领先世界近千年", "<b>贾思勰</b>《齐民要术》——现存最早最完整的农书", "<b>王羲之</b>《兰亭序》——「书圣」，天下第一行书", "顾恺之《女史箴图》《洛神赋图》；大同云冈、洛阳龙门石窟"] }
+  ]}
+];
+
+var box = document.getElementById("timeline-box");
+ERAS.forEach(function (era) {
+  var h = document.createElement("div");
+  h.className = "era-title";
+  h.innerHTML = '<span class="dot" style="background:' + era.color + '"></span>' +
+    '<span class="tag" style="background:' + era.color + '">' + era.tag + "</span>" +
+    '<span style="color:' + era.color + '">' + era.name + "</span>";
+  box.appendChild(h);
+  var tl = document.createElement("div");
+  tl.className = "timeline";
+  era.nodes.forEach(function (n) {
+    var d = document.createElement("div");
+    d.className = "node";
+    d.style.setProperty("--dotc", era.color);
+    d.innerHTML =
+      '<div class="node-card">' +
+        '<div class="node-head"><span class="date">' + n.date + '</span><span class="t">' + n.title + '</span><span class="arrow">▶</span></div>' +
+        '<div class="node-body"><ul>' + n.pts.map(function (p) { return "<li>" + p + "</li>"; }).join("") + "</ul></div>" +
+      "</div>";
+    d.querySelector(".node-head").addEventListener("click", function () { d.classList.toggle("open"); });
+    tl.appendChild(d);
+  });
+  box.appendChild(tl);
+});
+
+/* ================= 人物卡数据 ================= */
+var PEOPLE = [
+  { g: "百家争鸣", color: "#b8935a", list: [
+    { n: "孔子", r: "儒家创始人 · 春秋", tag: "仁", more: "「仁」和「礼」；有教无类、因材施教；言行记于《论语》" },
+    { n: "孟子", r: "儒家 · 战国", tag: "仁政", more: "民贵君轻；反对非正义战争" },
+    { n: "老子", r: "道家创始人 · 春秋", tag: "道", more: "《道德经》；道法自然、无为而治；事物有对立面且能互相转化" },
+    { n: "庄子", r: "道家 · 战国", tag: "逍遥", more: "治国要顺应自然和民心" },
+    { n: "墨子", r: "墨家创始人 · 战国", tag: "兼爱 非攻", more: "兼爱、非攻、尚贤、节俭" },
+    { n: "韩非", r: "法家集大成 · 战国", tag: "法治", more: "以法治国、建立中央集权——最受秦王政赏识" },
+    { n: "孙武", r: "兵家 · 春秋末", tag: "《孙子兵法》", more: "「知己知彼，百战不殆」" }
+  ]},
+  { g: "科技医学", color: "#7d8f4e", list: [
+    { n: "蔡伦", r: "东汉 · 造纸", tag: "蔡侯纸", more: "105年改进造纸术，原料易得、纸的质量提高" },
+    { n: "张仲景", r: "东汉 · 医圣", tag: "《伤寒杂病论》", more: "提出治未病；中医临床理论体系的基础" },
+    { n: "华佗", r: "东汉 · 外科", tag: "麻沸散", more: "世界上最早的麻醉剂之一；创编五禽戏" },
+    { n: "祖冲之", r: "南朝 · 数学家", tag: "圆周率第七位", more: "3.1415926–3.1415927，领先世界近千年；还创《大明历》" },
+    { n: "贾思勰", r: "北朝 · 农学家", tag: "《齐民要术》", more: "现存最早、最完整的农书" },
+    { n: "郦道元", r: "北魏 · 地理", tag: "《水经注》", more: "综合性的地理学著作" }
+  ]},
+  { g: "文史艺术", color: "#31536b", list: [
+    { n: "司马迁", r: "西汉 · 史学家", tag: "《史记》", more: "第一部纪传体通史，黄帝写到汉武帝；秉笔直书" },
+    { n: "王羲之", r: "东晋 · 书圣", tag: "《兰亭序》", more: "「飘若浮云，矫若惊龙」——天下第一行书" },
+    { n: "顾恺之", r: "东晋 · 画家", tag: "以形写神", more: "《女史箴图》《洛神赋图》" }
+  ]},
+  { g: "关键帝王", color: "#9d3b31", list: [
+    { n: "秦始皇", r: "嬴政 · 前221", tag: "第一个皇帝", more: "统一文字货币度量衡；郡县制；修长城凿灵渠；焚书坑儒" },
+    { n: "汉武帝", r: "西汉 · 大一统", tag: "推恩令 + 尊儒", more: "政治思想经济军事四面巩固大一统（见口诀④）" },
+    { n: "北魏孝文帝", r: "鲜卑族 · 494", tag: "迁都洛阳", more: "汉化改革：说汉话穿汉服改汉姓——促进民族交融" },
+    { n: "大禹", r: "夏朝开国之君", tag: "治水 + 世袭", more: "治水三过家门而不入；其子启开启「家天下」" }
+  ]}
+];
+
+var pbox = document.getElementById("people-box");
+PEOPLE.forEach(function (group) {
+  var h = document.createElement("div");
+  h.className = "era-title";
+  h.innerHTML = '<span class="dot" style="background:' + group.color + '"></span>' +
+    '<span style="color:' + group.color + '">' + group.g + "</span>";
+  pbox.appendChild(h);
+  var grid = document.createElement("div");
+  grid.className = "grid";
+  group.list.forEach(function (p) {
+    var f = document.createElement("div");
+    f.className = "flip";
+    f.style.setProperty("--c", group.color);
+    f.innerHTML =
+      '<div class="inner">' +
+        '<div class="face front"><div class="name">' + p.n + '</div><div class="role">' + p.r + '</div><div class="hint">点我 翻面看考点</div></div>' +
+        '<div class="face back"><div class="tag">' + p.tag + '</div><div class="more">' + p.more + "</div></div>" +
+      "</div>";
+    f.addEventListener("click", function () { f.classList.toggle("flipped"); });
+    grid.appendChild(f);
+  });
+  pbox.appendChild(grid);
+});
+
+/* ================= Tab 切换 ================= */
+var tabs = document.querySelectorAll("#tabs button");
+tabs.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    tabs.forEach(function (b) { b.classList.remove("on"); });
+    btn.classList.add("on");
+    document.querySelectorAll(".page").forEach(function (p) { p.classList.remove("on"); });
+    document.getElementById("page-" + btn.dataset.page).classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+</script>
+</body>
+</html>
