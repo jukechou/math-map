@@ -230,6 +230,68 @@
   .method p { font-size: 14px; color: #4a453b; }
   .method .step { font-weight: 700; }
 
+  /* ---------- 小测 ---------- */
+  .quiz-intro { text-align: center; padding: 26px 16px; }
+  .quiz-intro .big { font-family: "Songti SC", serif; font-size: 22px; font-weight: 700; color: var(--red); }
+  .quiz-intro p { font-size: 13.5px; color: var(--muted); margin: 8px 0 18px; }
+  .btn-red {
+    display: inline-block;
+    background: linear-gradient(150deg, var(--red), #7f2c24);
+    color: #fdf6ec;
+    border: none; border-radius: 24px;
+    font: inherit; font-size: 16px; font-weight: 600;
+    padding: 12px 40px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(157,59,49,.35);
+  }
+  .btn-red:active { transform: scale(.97); }
+  .q-progress { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
+  .q-bar { flex: 1; height: 6px; background: var(--line); border-radius: 3px; margin: 0 12px; overflow: hidden; }
+  .q-bar i { display: block; height: 100%; background: var(--red); border-radius: 3px; transition: width .3s; }
+  .q-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 16px; }
+  .q-unit { display: inline-block; font-size: 11px; color: #fff; border-radius: 5px; padding: 1px 8px; margin-bottom: 8px; }
+  .q-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+  .q-opt {
+    display: block; width: 100%; text-align: left;
+    background: #faf6ec; border: 1.5px solid var(--line);
+    border-radius: 10px;
+    font: inherit; font-size: 14.5px;
+    padding: 11px 14px; margin-bottom: 9px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .q-opt:active { border-color: var(--gold); }
+  .q-opt .abc { display: inline-block; font-weight: 700; color: var(--gold); margin-right: 8px; }
+  .q-opt.right { background: rgba(125,143,78,.15); border-color: var(--green); }
+  .q-opt.right .abc { color: var(--green); }
+  .q-opt.wrong { background: rgba(157,59,49,.1); border-color: var(--red); }
+  .q-opt.wrong .abc { color: var(--red); }
+  .q-opt:disabled { cursor: default; }
+  .q-exp {
+    display: none;
+    background: #f0e8d6;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: #5c5342;
+    margin-top: 4px;
+  }
+  .q-exp.show { display: block; }
+  .q-exp b.good { color: var(--green); }
+  .q-exp b.bad { color: var(--red); }
+  .q-next { display: none; width: 100%; margin-top: 12px; }
+  .q-result { text-align: center; padding: 10px 0 4px; }
+  .q-score { font-family: "Songti SC", serif; font-size: 46px; font-weight: 700; color: var(--red); }
+  .q-score small { font-size: 20px; color: var(--muted); }
+  .q-verdict { font-size: 15px; margin: 4px 0 16px; color: var(--ink); }
+  .q-wronglist { text-align: left; margin-top: 6px; }
+  .q-wronglist .w {
+    background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--red);
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 9px; font-size: 13.5px;
+  }
+  .q-wronglist .w .wq { font-weight: 600; margin-bottom: 3px; }
+  .q-wronglist .w .wa { color: var(--green); font-weight: 600; }
+
   footer {
     text-align: center; padding: 20px 16px 26px;
     font-size: 12px; color: var(--muted);
@@ -249,6 +311,7 @@
   <button data-page="rhyme">📜 口诀</button>
   <button data-page="people">🏷 人物卡</button>
   <button data-page="silk">🐫 丝绸之路</button>
+  <button data-page="quiz">✏️ 小测</button>
   <button data-page="howto">💡 怎么用</button>
 </nav>
 
@@ -356,6 +419,37 @@
       <div class="verse">丝绸之路是古代东西方往来的大动脉，
 促进了中国同其他国家和地区的贸易与文化交流。</div>
       <div class="note">"大动脉 + 促进交流"，大题答到这两点基本就拿满了。</div>
+    </div>
+  </section>
+
+  <!-- ============ 小测 ============ -->
+  <section class="page" id="page-quiz">
+    <div class="quiz-intro" id="quiz-intro">
+      <div class="big">全册小测</div>
+      <p>每次随机抽 10 道选择题，覆盖四个单元。<br>答完立刻判分，错题附解析，看错在哪儿再回时间轴补。</p>
+      <button class="btn-red" id="quiz-start">开始小测</button>
+    </div>
+    <div id="quiz-run" style="display:none">
+      <div class="q-progress">
+        <span id="q-count">第 1 / 10 题</span>
+        <div class="q-bar"><i id="q-bar-fill" style="width:0%"></i></div>
+        <span id="q-score-live">对 0</span>
+      </div>
+      <div class="q-card">
+        <span class="q-unit" id="q-unit"></span>
+        <div class="q-title" id="q-title"></div>
+        <div id="q-opts"></div>
+        <div class="q-exp" id="q-exp"></div>
+        <button class="btn-red q-next" id="q-next">下一题 →</button>
+      </div>
+    </div>
+    <div id="quiz-done" style="display:none">
+      <div class="q-result">
+        <div class="q-score"><span id="q-final">0</span><small> / 10</small></div>
+        <div class="q-verdict" id="q-verdict"></div>
+        <button class="btn-red" id="quiz-again">再来一组</button>
+      </div>
+      <div class="q-wronglist" id="q-wrong"></div>
     </div>
   </section>
 
@@ -513,6 +607,134 @@ PEOPLE.forEach(function (group) {
   });
   pbox.appendChild(grid);
 });
+
+/* ================= 小测 ================= */
+var UNIT_COLORS = { "史前": "#7d8f4e", "夏商周": "#b8935a", "秦汉": "#9d3b31", "魏晋南北朝": "#31536b" };
+var QUIZ = [
+  { u: "史前", q: "我国境内目前已确认的最早的古人类是？", o: ["北京人", "元谋人", "山顶洞人", "半坡居民"], a: 1, e: "元谋人（约170万年前，云南元谋）是我国境内目前已确认的最早的古人类。" },
+  { u: "史前", q: "北京人已经会使用火，他们用的是？", o: ["人工取火", "钻木取火", "天然火，并会保存火种", "不会用火"], a: 2, e: "北京人使用天然火，并会保存火种；人工取火是更晚的人类才掌握的。" },
+  { u: "史前", q: "种植水稻的原始居民是？", o: ["半坡居民", "河姆渡人", "北京人", "山顶洞人"], a: 1, e: "河姆渡人在长江流域种水稻（7000年前）；半坡人在黄河流域种粟（6000年前）。记忆：南稻北粟。" },
+  { u: "史前", q: "半坡居民的房屋样式是？", o: ["干栏式建筑", "半地穴式房屋", "茅草屋", "四合院"], a: 1, e: "半坡人住半地穴式圆形房屋（北方保暖）；干栏式是河姆渡人（南方防潮）。" },
+  { u: "史前", q: "华夏族逐渐形成与哪两场传说之战有关？", o: ["牧野之战、长平之战", "阪泉之战、涿鹿之战", "官渡之战、赤壁之战", "城濮之战、桂陵之战"], a: 1, e: "阪泉之战炎黄结盟，涿鹿之战打败蚩尤，之后形成华夏族——后人称「炎黄子孙」。" },
+  { u: "史前", q: "「禅让制」指的是？", o: ["父亲传位给儿子", "传位给贤德之人", "诸侯选举天子", "武力夺取王位"], a: 1, e: "尧→舜→禹，把部落联盟首领之位传给贤德之人，叫禅让制。" },
+  { u: "夏商周", q: "中国历史上第一个王朝是？", o: ["商朝", "夏朝", "西周", "秦朝"], a: 1, e: "约前2070年禹建立夏朝——我国历史上第一个王朝。" },
+  { u: "夏商周", q: "世袭制代替禅让制开始于？", o: "禹死后，启继承王位|商汤灭夏|盘庚迁殷|周平王东迁".split("|"), a: 0, e: "禹死后，其子启继承王位，「公天下」变成「家天下」。" },
+  { u: "夏商周", q: "我国已知最早、最成熟的文字是？", o: ["金文", "小篆", "甲骨文", "甲骨文之前的刻画符号"], a: 2, e: "商朝甲骨文是我国已知最早、最成熟的文字，记载内容可以与文献印证。" },
+  { u: "夏商周", q: "西周实行分封制的主要目的是？", o: ["奖励功臣享乐", "稳定周初的政治形势、巩固疆土", "发展商业贸易", "统一文字"], a: 1, e: "分封宗亲和功臣为诸侯，保证周王朝对地方的控制，稳定政局、扩大统治范围。" },
+  { u: "夏商周", q: "春秋时期第一位霸主是？", o: ["晋文公", "楚庄王", "齐桓公", "越王勾践"], a: 2, e: "齐桓公任用管仲改革，以「尊王攘夷」为号召，成为春秋首霸。" },
+  { u: "夏商周", q: "「纸上谈兵」与哪场战役有关？", o: ["桂陵之战", "马陵之战", "长平之战", "牧野之战"], a: 2, e: "战国末期的长平之战，赵国主帅赵括只会纸上谈兵，赵军大败。" },
+  { u: "夏商周", q: "商鞅变法的直接作用是？", o: ["使秦国国力增强，为统一全国奠定基础", "使东晋实现统一", "促进民族交融", "开辟丝绸之路"], a: 0, e: "前356年商鞅在秦孝公支持下变法：确立县制、奖励军功、奖励耕织——秦军战斗力大增，国力强盛。" },
+  { u: "夏商周", q: "修建都江堰的是？", o: ["李冰", "大禹", "管仲", "商鞅"], a: 0, e: "前256年秦国蜀郡郡守李冰主持修建都江堰（岷江），成都平原成为「天府之国」。" },
+  { u: "夏商周", q: "「兼爱」「非攻」是哪位思想家的主张？", o: ["孔子", "老子", "墨子", "韩非"], a: 2, e: "墨家创始人墨子主张兼爱、非攻、尚贤、节俭。" },
+  { u: "夏商周", q: "百家争鸣中主张「以法治国」、建立中央集权的是？", o: ["孟子", "庄子", "韩非", "孙武"], a: 2, e: "法家集大成者韩非反对空谈仁义、强调以法治国，其思想最受秦王政赏识。" },
+  { u: "秦汉", q: "秦统一六国、建立秦朝是在？", o: ["前1046年", "前356年", "前221年", "前202年"], a: 2, e: "前221年嬴政灭六国，建立我国历史上第一个统一多民族封建国家。" },
+  { u: "秦汉", q: "秦朝统一后通用的标准文字是？", o: ["甲骨文", "小篆", "楷书", "隶书"], a: 1, e: "秦始皇统一文字为小篆，同时统一货币（圆形方孔半两钱）、度量衡。" },
+  { u: "秦汉", q: "中国历史上第一次农民大起义是？", o: ["黄巾起义", "陈胜吴广起义", "八王之乱", "楚汉之争"], a: 1, e: "前209年陈胜、吴广在大泽乡起义，口号「王侯将相宁有种乎」。" },
+  { u: "秦汉", q: "汉武帝在思想上巩固大一统的措施是？", o: ["焚书坑儒", "罢黜百家，尊崇儒术", "八股取士", "实行分封"], a: 1, e: "接受董仲舒建议「罢黜百家，尊崇儒术」，并在长安兴办太学，儒学成为正统思想。" },
+  { u: "秦汉", q: "汉武帝颁布「推恩令」的目的是？", o: ["加强地方权力", "削弱诸侯国势力，加强中央集权", "奖励军功", "发展农业"], a: 1, e: "主父偃建议推恩令：诸侯王把封地分给子弟建立小侯国，王国越分越小，无力对抗中央。" },
+  { u: "秦汉", q: "丝绸之路的起点是？", o: ["洛阳", "建康", "长安", "成都"], a: 2, e: "丝路从长安出发→河西走廊→今新疆→中亚西亚→欧洲（大秦），是古代东西方往来的大动脉。" },
+  { u: "秦汉", q: "标志着今新疆地区正式归属中央政权的是？", o: ["张骞通西域", "设立西域都护（前60年）", "班超经营西域", "丝绸之路开通"], a: 1, e: "前60年西汉设置西域都护，作为管理西域的最高长官。" },
+  { u: "秦汉", q: "改进造纸术、制成「蔡侯纸」的是？", o: ["蔡伦", "华佗", "张仲景", "司马迁"], a: 0, e: "105年东汉蔡伦改进造纸工艺。造纸术的传播便利了典籍保存和文化传播。" },
+  { u: "秦汉", q: "被称为「医圣」的是？", o: ["华佗", "张仲景", "扁鹊", "李时珍"], a: 1, e: "东汉张仲景写成《伤寒杂病论》，提出「治未病」，后世尊其为医圣；华佗是麻沸散和五禽戏。" },
+  { u: "秦汉", q: "《史记》的体例和记载范围是？", o: ["第一部编年体史书，记春秋", "第一部纪传体通史，黄帝到汉武帝", "第一部断代史，记西汉", "地理著作"], a: 1, e: "司马迁著《史记》，是我国第一部纪传体通史，记述从传说中的黄帝到汉武帝时期。" },
+  { u: "魏晋南北朝", q: "为三国鼎立局面奠定基础的战役是？", o: ["官渡之战", "巨鹿之战", "赤壁之战", "淝水之战"], a: 2, e: "208年赤壁之战孙刘联军以少胜多大败曹操；官渡之战（200年）则是为曹操统一北方奠基。" },
+  { u: "魏晋南北朝", q: "三国中定都「成都」的是？", o: ["魏", "蜀", "吴", "西晋"], a: 1, e: "220年曹丕建魏（洛阳）；221年刘备建蜀（成都）；229年孙权建吴（建业）。" },
+  { u: "魏晋南北朝", q: "东晋南朝时期江南地区得到开发的主要原因是？", o: ["江南气候变冷", "北方人口南迁带来劳动力和先进生产工具与技术", "统治者迁都江南", "丝绸之路经过江南"], a: 1, e: "北方战乱（八王之乱等）导致人口南迁，带去劳动力和先进工具技术，加上江南自然条件优越、社会相对安定。" },
+  { u: "魏晋南北朝", q: "北魏孝文帝改革的措施不包括？", o: ["迁都洛阳", "规定官员在朝廷上必须说汉语", "改鲜卑姓为汉姓", "统一度量衡"], a: 3, e: "孝文帝改革：494年迁都洛阳、说汉语、穿汉服、改汉姓、鼓励通婚姻——促进民族交融。统一度量衡是秦始皇的措施。" },
+  { u: "魏晋南北朝", q: "把圆周率精确到小数点后第七位的科学家是？", o: ["贾思勰", "郦道元", "祖冲之", "蔡伦"], a: 2, e: "南朝祖冲之利用「割圆术」把圆周率精确到3.1415926—3.1415927之间，领先世界近千年。" },
+  { u: "魏晋南北朝", q: "被后人称为「书圣」的是？", o: ["王羲之", "顾恺之", "颜真卿", "柳公权"], a: 0, e: "东晋王羲之的代表作《兰亭序》被称为「天下第一行书」。" }
+];
+
+var qs = null, qi = 0, qRight = 0, qWrong = [];
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function startQuiz() {
+  qs = shuffle(QUIZ).slice(0, 10);
+  qi = 0; qRight = 0; qWrong = [];
+  document.getElementById("quiz-intro").style.display = "none";
+  document.getElementById("quiz-done").style.display = "none";
+  document.getElementById("quiz-run").style.display = "block";
+  renderQ();
+}
+function renderQ() {
+  var q = qs[qi];
+  document.getElementById("q-count").textContent = "第 " + (qi + 1) + " / " + qs.length + " 题";
+  document.getElementById("q-bar-fill").style.width = (qi / qs.length * 100) + "%";
+  document.getElementById("q-score-live").textContent = "对 " + qRight;
+  var uEl = document.getElementById("q-unit");
+  uEl.textContent = q.u;
+  uEl.style.background = UNIT_COLORS[q.u] || "#9d3b31";
+  document.getElementById("q-title").textContent = q.q;
+  document.getElementById("q-exp").classList.remove("show");
+  document.getElementById("q-exp").innerHTML = "";
+  document.getElementById("q-next").style.display = "none";
+  var box = document.getElementById("q-opts");
+  box.innerHTML = "";
+  q.o.forEach(function (opt, idx) {
+    var b = document.createElement("button");
+    b.className = "q-opt";
+    b.innerHTML = '<span class="abc">' + "ABCD"[idx] + '</span>' + opt;
+    b.addEventListener("click", function () { pick(idx, b); });
+    box.appendChild(b);
+  });
+}
+function pick(idx, btn) {
+  var q = qs[qi];
+  var opts = document.querySelectorAll("#q-opts .q-opt");
+  opts.forEach(function (o) { o.disabled = true; });
+  var ok = idx === q.a;
+  if (ok) {
+    qRight++;
+    btn.classList.add("right");
+  } else {
+    btn.classList.add("wrong");
+    opts[q.a].classList.add("right");
+    qWrong.push(q);
+  }
+  document.getElementById("q-score-live").textContent = "对 " + qRight;
+  var exp = document.getElementById("q-exp");
+  exp.innerHTML = (ok ? "<b class='good'>✔ 答对了！</b>" : "<b class='bad'>✘ 答错了。</b>") + " " + q.e;
+  exp.classList.add("show");
+  var next = document.getElementById("q-next");
+  next.textContent = qi === qs.length - 1 ? "看成绩 →" : "下一题 →";
+  next.style.display = "inline-block";
+}
+function nextQ() {
+  qi++;
+  if (qi < qs.length) { renderQ(); }
+  else { finishQuiz(); }
+}
+function finishQuiz() {
+  document.getElementById("quiz-run").style.display = "none";
+  document.getElementById("quiz-done").style.display = "block";
+  document.getElementById("q-final").textContent = qRight;
+  var v = document.getElementById("q-verdict");
+  if (qRight === 10) v.textContent = "🏆 满分！这一册已经刻进脑子里了～";
+  else if (qRight >= 8) v.textContent = "👍 非常棒！错的两题翻翻时间轴就补上了。";
+  else if (qRight >= 6) v.textContent = "🙂 不错，回时间轴把错题对应的节点点开看一看。";
+  else if (qRight >= 4) v.textContent = "📖 骨架还有点松——先把时间轴完整顺一遍，再回来重测。";
+  else v.textContent = "🌱 别灰心！先刷时间轴和人物卡，明天再来测一次。";
+  var wl = document.getElementById("q-wrong");
+  if (qWrong.length) {
+    wl.innerHTML = "<div class='era-title'><span class='dot' style='background:#9d3b31'></span><span style='color:#9d3b31'>错题回顾 · " + qWrong.length + " 道</span></div>" +
+      qWrong.map(function (q) {
+        return "<div class='w'><div class='wq'>" + q.q + "</div>" +
+          "<div class='wa'>✔ " + q.o[q.a] + "</div>" +
+          "<div style='color:#8a8272;font-size:12.5px;margin-top:2px'>" + q.e + "</div></div>";
+      }).join("");
+  } else {
+    wl.innerHTML = "";
+  }
+}
+document.getElementById("quiz-start").addEventListener("click", startQuiz);
+document.getElementById("quiz-again").addEventListener("click", startQuiz);
+document.getElementById("q-next").addEventListener("click", nextQ);
 
 /* ================= Tab 切换 ================= */
 var tabs = document.querySelectorAll("#tabs button");
