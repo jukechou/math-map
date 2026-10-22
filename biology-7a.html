@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3f7d44">
+<title>初一生物 · 七年级上册记忆卡</title>
+<style>
+  :root {
+    --paper: #f3f6ef;
+    --card: #fffefa;
+    --ink: #2e352b;
+    --muted: #7d8a76;
+    --leaf: #3f7d44;
+    --teal: #3a8f83;
+    --olive: #6b9a3f;
+    --gold: #a67c2e;
+    --bark: #8a5a3a;
+    --line: #dce4d4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    padding-bottom: 88px;
+  }
+  h1, h2, h3, .serif { font-family: "Songti SC", "STSong", "SimSun", Georgia, serif; }
+
+  header {
+    background: linear-gradient(160deg, #2e5e31, var(--leaf) 55%, #5e9a50);
+    color: #f2f8ee;
+    text-align: center;
+    padding: 34px 18px 26px;
+    border-bottom: 4px solid var(--gold);
+  }
+  header .seal {
+    display: inline-block;
+    border: 2px solid rgba(242,248,238,.75);
+    border-radius: 10px;
+    padding: 14px 26px;
+    font-size: 26px;
+    letter-spacing: 8px;
+    font-weight: 700;
+  }
+  header .sub { margin-top: 10px; font-size: 13px; opacity: .85; letter-spacing: 2px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex;
+    background: rgba(243,246,239,.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav button {
+    flex: 1 0 auto;
+    border: none; background: none;
+    font: inherit; font-size: 15px;
+    padding: 13px 14px;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  nav button.on { color: var(--leaf); border-bottom-color: var(--leaf); font-weight: 600; }
+
+  main { max-width: 680px; margin: 0 auto; padding: 18px 14px 30px; }
+  .page { display: none; }
+  .page.on { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .tip {
+    background: #e9f1e2;
+    border: 1px dashed var(--olive);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #55704a;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- 知识路线 ---------- */
+  .era-title {
+    display: flex; align-items: center; gap: 10px;
+    margin: 26px 0 12px;
+    font-size: 17px; font-weight: 700;
+  }
+  .era-title .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .era-title .tag { font-size: 11px; color: #fff; border-radius: 6px; padding: 2px 8px; letter-spacing: 1px; }
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--line);
+  }
+  .node { position: relative; margin-bottom: 12px; }
+  .node::before {
+    content: ""; position: absolute; left: -25px; top: 16px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--paper); border: 3px solid var(--dotc, var(--leaf));
+  }
+  .node-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(50,90,40,.08);
+  }
+  .node-head {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+  }
+  .node-head .date {
+    font-size: 12px; font-weight: 700; white-space: nowrap;
+    color: var(--dotc, var(--leaf));
+    min-width: 52px;
+    font-family: Georgia, serif;
+  }
+  .node-head .t { font-weight: 600; font-size: 15.5px; }
+  .node-head .arrow { margin-left: auto; color: var(--muted); font-size: 12px; transition: transform .2s; }
+  .node.open .arrow { transform: rotate(90deg); }
+  .node-body { display: none; padding: 2px 14px 13px; border-top: 1px dashed var(--line); }
+  .node.open .node-body { display: block; }
+  .node-body li {
+    list-style: none;
+    font-size: 14px;
+    padding: 4px 0 4px 18px;
+    position: relative;
+    color: #414a3c;
+  }
+  .node-body li::before {
+    content: "·"; position: absolute; left: 6px;
+    color: var(--dotc, var(--leaf)); font-weight: 700;
+  }
+  .node-body .kw {
+    display: inline-block;
+    background: rgba(63,125,68,.1);
+    color: var(--leaf);
+    border-radius: 5px;
+    padding: 0 6px;
+    font-size: 13px;
+    margin: 2px 0;
+  }
+
+  /* ---------- 口诀 ---------- */
+  .rhyme {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--leaf);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .rhyme h3 { font-size: 15px; color: var(--leaf); margin-bottom: 6px; }
+  .rhyme .verse {
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    font-size: 16.5px;
+    letter-spacing: 1px;
+    color: var(--ink);
+    white-space: pre-line;
+  }
+  .rhyme .note { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  table.num { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card); border-radius: 10px; overflow: hidden; }
+  table.num th, table.num td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; }
+  table.num th { background: #e9f1e2; font-size: 13px; color: #55704a; }
+  table.num td.d { font-family: Georgia, serif; font-weight: 700; color: var(--leaf); white-space: nowrap; }
+
+  /* ---------- 概念卡 ---------- */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 480px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  .flip { perspective: 800px; height: 118px; cursor: pointer; }
+  .flip .inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .35s;
+    transform-style: preserve-3d;
+  }
+  .flip.flipped .inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 8px; text-align: center;
+  }
+  .face.front {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--c, var(--leaf));
+  }
+  .face.front .name { font-family: "Songti SC", serif; font-size: 16.5px; font-weight: 700; }
+  .face.front .role { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .face.front .hint { font-size: 10px; color: #bcc9b3; margin-top: 6px; }
+  .face.back {
+    background: linear-gradient(150deg, var(--c, var(--leaf)), color-mix(in srgb, var(--c, var(--leaf)) 72%, black));
+    color: #f2f8ee;
+    transform: rotateY(180deg);
+    font-size: 12px;
+    line-height: 1.5;
+    overflow: hidden;
+  }
+  .face.back .tag { font-size: 14.5px; font-weight: 700; letter-spacing: 1px; }
+  .face.back .more { margin-top: 4px; opacity: .92; }
+
+  /* ---------- 随机自测 ---------- */
+  .quiz-card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 16px 18px;
+    box-shadow: 0 1px 3px rgba(50,90,40,.08);
+  }
+  .quiz-progress { font-size: 12px; color: var(--muted); margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .quiz-q { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    text-align: left; border: 1.5px solid var(--line); background: #fbfdfb;
+    border-radius: 10px; padding: 11px 12px; font: inherit; font-size: 14px;
+    cursor: pointer; display: flex; gap: 8px; align-items: flex-start; min-height: 40px; color: var(--ink);
+  }
+  .opt .idx { font-weight: 700; color: var(--leaf); }
+  .opt.correct { border-color: var(--olive); background: #edf5e4; }
+  .opt.wrong { border-color: #c0564d; background: #f9e9e7; }
+  .opt:disabled { cursor: default; }
+  .quiz-exp {
+    display: none; margin-top: 10px; font-size: 13px; color: #414a3c;
+    background: #edf5e4; border-left: 3px solid var(--olive); padding: 8px 10px; border-radius: 8px;
+  }
+  .quiz-next {
+    display: none; margin-top: 12px; width: 100%; border: none;
+    background: var(--leaf); color: #fff; font: inherit; font-size: 15px;
+    padding: 12px; border-radius: 10px; cursor: pointer;
+  }
+  .quiz-result { text-align: center; padding: 26px 10px; display: none; }
+  .quiz-score { font-size: 44px; font-weight: 800; color: var(--leaf); font-family: Georgia, serif; }
+  .quiz-result .msg { font-size: 14px; color: #414a3c; margin: 8px 0 16px; }
+  .quiz-result button {
+    border: 1.5px solid var(--leaf); background: #fbfdfb; color: var(--leaf);
+    font: inherit; font-size: 14px; padding: 10px 16px; border-radius: 10px; margin: 0 5px; cursor: pointer;
+  }
+  .quiz-result button.primary { background: var(--leaf); color: #fff; }
+
+  /* ---------- 怎么用 ---------- */
+  .method {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
+  }
+  .method h3 { font-size: 15.5px; color: var(--leaf); margin-bottom: 6px; }
+  .method p { font-size: 14px; color: #414a3c; }
+  .method .step { font-weight: 700; }
+
+  footer {
+    text-align: center; padding: 20px 16px 26px;
+    font-size: 12px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="seal serif">生生·不息</div>
+  <div class="sub">初一生物 · 七年级上册 · 人教版（2024新版）· 睡前刷一刷</div>
+</header>
+
+<nav id="tabs">
+  <button class="on" data-page="route">🧭 知识路线</button>
+  <button data-page="rhyme">📜 口诀</button>
+  <button data-page="cards">🔬 概念卡</button>
+  <button data-page="quiz">🎯 随机自测</button>
+  <button data-page="howto">💡 怎么用</button>
+</nav>
+
+<main>
+  <!-- ============ 知识路线 ============ -->
+  <section class="page on" id="page-route">
+    <div class="tip">👆 点开每个节点查看考点要点。先从「认识生物」顺到「生物分类的方法」，再合上手机，把两大单元各讲一遍。</div>
+    <div id="route-box"></div>
+  </section>
+
+  <!-- ============ 口诀 ============ -->
+  <section class="page" id="page-rhyme">
+    <div class="tip">口诀先读顺、再抄一遍，比死背快得多。</div>
+
+    <div class="rhyme">
+      <h3>① 生物的特征</h3>
+      <div class="verse">营养呼吸排废物，
+受到刺激有反应；
+生长繁殖延后代，
+除病毒外皆细胞。</div>
+      <div class="note">判断"是不是生物"就背这六条。机器人、钟乳石都不满足，是常设陷阱。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>② 显微镜使用</h3>
+      <div class="verse">取镜安放再对光，
+低倍找像粗调焦；
+换高倍时只动细，
+物像倒立要记牢。</div>
+      <div class="note">放大倍数＝<b>目镜 × 物镜</b>；物像偏视野哪边，玻片就往哪边移（同向移动）。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>③ 临时装片制作</h3>
+      <div class="verse">擦、滴、取、展、盖、染，
+六步一步不能乱；
+洋葱清水口腔盐水。</div>
+      <div class="note">植物细胞滴<b>清水</b>；人的口腔上皮细胞滴<b>生理盐水</b>（维持细胞形态）——最爱考的区别！</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>④ 细胞结构与功能</h3>
+      <div class="verse">壁支持，膜控物，
+叶绿造养线供能，
+细胞核里藏遗传。</div>
+      <div class="note">植物特有：<b>细胞壁、叶绿体</b>（成熟细胞还有大液泡）；动物细胞没有。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑤ 结构层次</h3>
+      <div class="verse">细胞组织到器官，
+动物再加系统级；
+植物六大器官齐，
+没有系统要牢记。</div>
+      <div class="note">动物八大系统；植物六大器官：根、茎、叶、花、果实、种子。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑥ 孢子植物三兄弟</h3>
+      <div class="verse">藻类无根茎叶，
+苔藓茎叶假根住；
+蕨类根茎叶输导，
+都用孢子来繁殖。</div>
+      <div class="note">苔藓植物的叶只有一层细胞，是<b>监测空气污染的指示植物</b>。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑦ 种子的结构</h3>
+      <div class="verse">种皮护胚最重要，
+芽轴根子四件套；
+双子叶养存子叶，
+单子叶里胚乳饱。</div>
+      <div class="note">胚＝<b>胚芽＋胚轴＋胚根＋子叶</b>，是新植物体的幼体。菜豆双子叶养分在子叶，玉米单子叶有胚乳。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑧ 脊椎动物五大家族</h3>
+      <div class="verse">鱼鳃鳍、两栖变态，
+爬行羊卵真登陆；
+鸟气囊、哺乳胎，
+恒温只有鸟和兽。</div>
+      <div class="note">鱼侧线感知水流；鸟类气囊辅助肺完成<b>双重呼吸</b>；哺乳动物<b>胎生、哺乳</b>。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑨ 微生物三兄弟</h3>
+      <div class="verse">细菌原核分裂快，
+真菌真核孢子飞；
+病毒没有细胞结，
+寄生才能活起来。</div>
+      <div class="note">细菌<b>无成形细胞核</b>（原核生物）；病毒＝<b>蛋白质外壳＋遗传物质</b>，必须寄生在活细胞里。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑩ 必背数字表（考场上值 10 分）</h3>
+      <table class="num">
+        <tr><th>数字</th><th>一句话记</th></tr>
+        <tr><td class="d">6 大特征</td><td>生物的六大共同特征</td></tr>
+        <tr><td class="d">2 大转换器</td><td>叶绿体、线粒体（能量转换器）</td></tr>
+        <tr><td class="d">4 大动物组织</td><td>上皮、肌肉、神经、结缔组织</td></tr>
+        <tr><td class="d">6 大植物器官</td><td>根、茎、叶、花、果实、种子</td></tr>
+        <tr><td class="d">4 部分胚</td><td>胚芽、胚轴、胚根、子叶</td></tr>
+        <tr><td class="d">5 大脊椎动物</td><td>鱼、两栖、爬行、鸟、哺乳</td></tr>
+        <tr><td class="d">7 个分类等级</td><td>界、门、纲、目、科、属、种</td></tr>
+        <tr><td class="d">1 个基本单位</td><td>种是最基本的分类单位；细胞是基本单位（除病毒外）</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 概念卡 ============ -->
+  <section class="page" id="page-cards">
+    <div class="tip">👇 先看概念猜答案，点卡片翻面对答案。全对的卡就跳过，只刷翻错的。</div>
+    <div id="cards-box"></div>
+  </section>
+
+  <!-- ============ 随机自测 ============ -->
+  <section class="page" id="page-quiz">
+    <div class="tip">每次题目顺序随机。选错不要紧，看一眼解析，记住就算赢。</div>
+    <div class="quiz-card" id="quiz-card"></div>
+  </section>
+
+  <!-- ============ 怎么用 ============ -->
+  <section class="page" id="page-howto">
+    <div class="method">
+      <h3>🌙 每晚 10 分钟：讲图法</h3>
+      <p><span class="step">①</span> 打开知识路线，从头顺一遍（1 分钟）；<br>
+      <span class="step">②</span> 合上手机，画一张细胞结构图，或把今天学的实验步骤讲给爸妈听（5 分钟）；<br>
+      <span class="step">③</span> 卡壳的地方，点开对应节点只看那一个（4 分钟）。</p>
+    </div>
+    <div class="method">
+      <h3>🃏 碎片时间：刷概念卡</h3>
+      <p>排队、坐车、课间，翻两轮概念卡。翻错的第二天再刷一遍——只跟"没记住的"较劲，不要从头背。</p>
+    </div>
+    <div class="method">
+      <h3>📅 周末 20 分钟：整体过线</h3>
+      <p>把知识路线从「认识生物」到「生物分类的方法」完整讲一遍。哪一站讲不顺，就说明那里要补；再来一轮随机自测，正确率 15/18 以上就稳了。</p>
+    </div>
+    <div class="method">
+      <h3>✍️ 考试小提醒</h3>
+      <p>生物大题是<b>踩点给分</b>：结构名称不能有错别字（缐粒体✗、线粒体✓）；答功能题记住"结构与功能相对应"。实验题记<b>"变量唯一"</b>——对照实验只能有一个条件不同。</p>
+    </div>
+    <div class="tip" style="margin-top:4px">📱 建议用 Safari 打开后「分享 → 添加到主屏幕」，像 App 一样点开就刷。</div>
+  </section>
+</main>
+
+<footer>
+  人教版《生物学》七年级上册（2024新版） · 配合"睡前讲图法"使用<br>
+  内容供复习参考，以课本和老师讲授为准
+</footer>
+
+<script>
+/* ================= 知识路线数据（人教版2024·两单元七章20节点） ================= */
+var ERAS = [
+  { name: "第一章 · 认识生物", tag: "一单元", color: "#3f7d44", nodes: [
+    { date: "§1.1", title: "观察周边环境中的生物", pts: ["观察要有<b>明确目的</b>，先整体后局部、由外到内，及时记录", "调查是科学探究常用方法：确定对象→分组→如实记录→整理分析", "区分生物与非生物：看是否具有<b>生物的特征</b>"] },
+    { date: "§1.2", title: "生物的特征", pts: ["六大特征：生活需要<b>营养</b>、能进行<b>呼吸</b>、能<b>排出体内产生的废物</b>", "能对<b>外界刺激作出反应</b>（应激性）；能<b>生长和繁殖</b>；有<b>遗传和变异</b>", "除<b>病毒</b>外，生物体都由<b>细胞</b>构成；生物都能适应并影响环境"] }
+  ]},
+  { name: "第二章 · 认识细胞", tag: "一单元", color: "#3a8f83", nodes: [
+    { date: "§2.1", title: "学习使用显微镜", pts: ["重要结构：<b>目镜、物镜</b>（放大）、<b>粗/细准焦螺旋</b>（调焦）、遮光器与反光镜（调光）", "步骤：取镜安放 → <b>对光</b> → 放片观察 → 整理", "放大倍数＝<b>目镜倍数 × 物镜倍数</b>；看到的物像是<b>倒立</b>的", "物像偏向视野哪一方，玻片就往<b>同一方向</b>移动"] },
+    { date: "§2.2", title: "植物细胞", pts: ["玻片标本：切片、涂片、<b>装片</b>", "制作洋葱鳞片叶表皮临时装片：<span class='kw'>擦、滴（清水）、取、展、盖、染</span>", "结构：细胞壁（保护支持）、细胞膜、细胞质、<b>细胞核</b>、液泡、<b>叶绿体</b>（绿色部分）"] },
+    { date: "§2.3", title: "动物细胞", pts: ["制作口腔上皮细胞临时装片：滴<b>生理盐水</b>（维持形态）、染色用碘液", "结构：<b>细胞膜、细胞质、细胞核</b>", "与植物细胞区别：<b>没有细胞壁、叶绿体</b>，一般也没有大液泡"] },
+    { date: "§2.4", title: "细胞的生活", pts: ["<b>细胞膜</b>：控制物质进出；<b>细胞质</b>：流动加速物质交换", "<b>叶绿体</b>：光合作用，光能→化学能（养料）；<b>线粒体</b>：呼吸作用，动力车间", "<b>细胞核</b>：遗传信息库，是细胞生命活动的<b>控制中心</b>；DNA＋蛋白质＝染色体"] }
+  ]},
+  { name: "第三章 · 从细胞到生物体", tag: "一单元", color: "#6b9a3f", nodes: [
+    { date: "§3.1", title: "细胞通过分裂产生新细胞", pts: ["分裂顺序：<b>细胞核先一分为二</b> → 细胞质分成两份 → 形成新细胞膜（植物还形成新细胞壁）", "分裂时<b>染色体先复制再均分</b>，保证遗传物质稳定", "生物体由小长大：靠<b>细胞分裂</b>（增多）＋<b>细胞生长</b>（长大）"] },
+    { date: "§3.2", title: "动物体的结构层次", pts: ["<b>细胞分化</b>→形成组织；组织＝形态相似、结构和功能相同的细胞群", "四大组织：<b>上皮、肌肉、神经、结缔</b>组织", "层次：<span class='kw'>细胞 → 组织 → 器官 → 系统 → 动物体</span>（八大系统协调配合）"] },
+    { date: "§3.3", title: "植物体的结构层次", pts: ["主要组织：保护、输导、分生、营养、机械组织", "六大器官：<b>根、茎、叶</b>（营养器官）＋<b>花、果实、种子</b>（生殖器官）", "层次：<span class='kw'>细胞 → 组织 → 器官 → 植物体</span>，<b>没有系统</b>"] },
+    { date: "§3.4", title: "单细胞生物", pts: ["代表：草履虫——像倒转的草鞋底，全部生命活动在一个细胞内完成", "<b>表膜</b>呼吸排废、<b>口沟</b>取食、<b>食物泡</b>消化、<b>收集管和伸缩泡</b>排水、<b>纤毛</b>运动", "与人类关系：净化污水、鱼类的天然饵料；疟原虫等使人致病"] }
+  ]},
+  { name: "第一章 · 藻类与植物的类群", tag: "二单元", color: "#8fae4a", nodes: [
+    { date: "§1.1", title: "藻类、苔藓植物和蕨类植物", pts: ["<b>藻类</b>：结构简单，<b>无根茎叶分化</b>，大多生活在水中", "<b>苔藓</b>：有茎叶、无真根（假根），叶仅一层细胞——<b>空气污染指示植物</b>", "<b>蕨类</b>：有根茎叶的分化，有<b>输导组织</b>，适合阴湿环境", "三者都用<b>孢子</b>繁殖，统称孢子植物"] },
+    { date: "§1.2", title: "种子植物", pts: ["<b>裸子植物</b>：种子裸露，无果皮包被（松、杉、银杏、苏铁）", "<b>被子植物</b>：种子有果皮包被，有六大器官，是最高等的植物类群", "种子结构：<b>种皮＋胚</b>；胚＝<span class='kw'>胚芽、胚轴、胚根、子叶</span>，是新植物体的幼体", "菜豆（双子叶，养分在子叶，无胚乳）；玉米（单子叶，有胚乳）"] }
+  ]},
+  { name: "第二章 · 动物的类群", tag: "二单元", color: "#a67c2e", nodes: [
+    { date: "§2.1", title: "无脊椎动物", pts: ["主要类群：腔肠（水螅）、扁形（涡虫）、线虫（蛔虫）、环节（蚯蚓）、软体（河蚌）、节肢（昆虫、虾蟹）", "<b>节肢动物</b>（种类最多）：体表有<b>外骨骼</b>，足和触角分节；昆虫有三对足、两对翅", "蚯蚓：靠湿润的<b>体壁</b>呼吸，刚毛辅助运动"] },
+    { date: "§2.2", title: "脊椎动物", pts: ["<b>鱼</b>：鳃呼吸、鳍游泳、<b>侧线</b>感知水流，体表常有鳞片", "<b>两栖动物</b>：幼体水中鳃呼吸，成体肺＋皮肤呼吸，变态发育（青蛙）", "<b>爬行动物</b>：真正的陆生脊椎动物，体表有鳞片或甲，产羊膜卵", "<b>鸟</b>：恒温，<b>气囊辅助肺完成双重呼吸</b>，流线型体形；<b>哺乳动物</b>：恒温，<b>胎生、哺乳</b>，牙齿分化"] }
+  ]},
+  { name: "第三章 · 微生物", tag: "二单元", color: "#8a5a3a", nodes: [
+    { date: "§3.1", title: "微生物的分布", pts: ["培养微生物：配制<b>培养基</b> → 高温灭菌 → <b>接种</b> → 恒温培养", "菌落：一个细菌/真菌繁殖后形成的肉眼可见的集合体"] },
+    { date: "§3.2", title: "细菌", pts: ["单细胞，<b>无成形的细胞核</b>（原核生物）——与真菌的根本区别", "有的有<b>荚膜</b>（保护）、<b>鞭毛</b>（运动）", "<b>分裂生殖</b>，速度快；不良环境形成<b>芽孢</b>（休眠体，抗性强）"] },
+    { date: "§3.3", title: "真菌", pts: ["<b>有成形细胞核</b>（真核生物）；酵母菌（单细胞）、霉菌和蘑菇（多细胞）", "进行<b>孢子生殖</b>；酵母菌条件适宜时还能出芽生殖", "与人类关系：酿酒面包（酵母菌）、制酱（霉菌）、抗生素；也有致病真菌"] },
+    { date: "§3.4", title: "病毒", pts: ["<b>无细胞结构</b>：蛋白质外壳＋内部遗传物质", "不能独立生活，只能<b>寄生在活细胞</b>里（离开活细胞变成结晶体）", "分三类：<b>动物病毒、植物病毒、细菌病毒（噬菌体）</b>"] }
+  ]},
+  { name: "第四章 · 生物分类的方法", tag: "二单元", color: "#7a6aa0", nodes: [
+    { date: "§4.1", title: "尝试对生物进行分类", pts: ["分类依据：<b>形态结构、生理功能</b>等方面的相似程度", "植物按能否产生种子分成种子植物与孢子植物；动物按有无<b>脊柱</b>分脊椎/无脊椎"] },
+    { date: "§4.2", title: "从种到界", pts: ["七个分类等级由大到小：<span class='kw'>界、门、纲、目、科、属、种</span>", "<b>种</b>是最基本的分类单位，同种生物亲缘关系最近", "<b>双名法</b>：林奈提出，每种的学名＝属名＋种加词（斜体拉丁文）"] }
+  ]}
+];
+
+var box = document.getElementById("route-box");
+ERAS.forEach(function (era) {
+  var h = document.createElement("div");
+  h.className = "era-title";
+  h.innerHTML = '<span class="dot" style="background:' + era.color + '"></span>' +
+    '<span class="tag" style="background:' + era.color + '">' + era.tag + "</span>" +
+    '<span style="color:' + era.color + '">' + era.name + "</span>";
+  box.appendChild(h);
+  var tl = document.createElement("div");
+  tl.className = "timeline";
+  era.nodes.forEach(function (n) {
+    var d = document.createElement("div");
+    d.className = "node";
+    d.style.setProperty("--dotc", era.color);
+    d.innerHTML =
+      '<div class="node-card">' +
+        '<div class="node-head"><span class="date">' + n.date + '</span><span class="t">' + n.title + '</span><span class="arrow">▶</span></div>' +
+        '<div class="node-body"><ul>' + n.pts.map(function (p) { return "<li>" + p + "</li>"; }).join("") + "</ul></div>" +
+      "</div>";
+    d.querySelector(".node-head").addEventListener("click", function () { d.classList.toggle("open"); });
+    tl.appendChild(d);
+  });
+  box.appendChild(tl);
+});
+
+/* ================= 概念卡数据（4组20张） ================= */
+var CARDS = [
+  { g: "细胞世界", color: "#3f7d44", list: [
+    { n: "显微镜倍数", r: "怎么看多大？", tag: "目镜×物镜", more: "10×40＝400倍；物像倒立，玻片与物像同向移动" },
+    { n: "临时装片", r: "六步口诀", tag: "擦滴取展盖染", more: "植物滴清水；口腔上皮滴生理盐水（保持形态）" },
+    { n: "植物特有结构", r: "动物没有的", tag: "壁·叶绿体·液泡", more: "细胞壁、叶绿体；成熟植物细胞有大液泡" },
+    { n: "细胞膜", r: "细胞的门卫", tag: "控制物质进出", more: "让有用的进、有害的出（也有保护作用）" },
+    { n: "能量转换器", r: "两大车间", tag: "叶绿·线粒", more: "叶绿体：光合，光能→化学能；线粒体：呼吸，动力车间" },
+    { n: "细胞核", r: "遗传信息库", tag: "控制中心", more: "内含DNA（与蛋白质组成染色体），是生命活动的控制中心" }
+  ]},
+  { g: "结构层次", color: "#3a8f83", list: [
+    { n: "细胞分裂", r: "数目变多", tag: "染色体复制均分", more: "核先分→质分→新膜壁；染色体先复制再均分，遗传物质稳定" },
+    { n: "细胞分化", r: "种类变多", tag: "形成组织", more: "分化→形态结构功能相同的细胞群＝组织" },
+    { n: "动物体层次", r: "从细胞到个体", tag: "细胞→组织→器官→系统→个体", more: "四大组织：上皮、肌肉、神经、结缔；八大系统" },
+    { n: "植物体层次", r: "少了哪级？", tag: "无系统", more: "细胞→组织→器官→植物体；六大器官：根茎叶花果实种子" },
+    { n: "草履虫", r: "单细胞代表", tag: "表膜呼吸·纤毛运动", more: "口沟取食、食物泡消化、伸缩泡和收集管排水、表膜呼吸" }
+  ]},
+  { g: "多样的生物", color: "#6b9a3f", list: [
+    { n: "藻·苔·蕨", r: "孢子植物", tag: "从无根到有根", more: "藻类无根茎叶；苔藓有茎叶假根（污染指示）；蕨类有输导组织" },
+    { n: "裸子 vs 被子", r: "种子植物", tag: "果皮包不包", more: "裸子种子裸露（松杉银杏）；被子有果皮包被，六大器官齐全" },
+    { n: "种子的胚", r: "新植物体的幼体", tag: "芽轴根子四件套", more: "胚＝胚芽＋胚轴＋胚根＋子叶；菜豆双子叶、玉米单子叶有胚乳" },
+    { n: "节肢动物", r: "种类最多的门", tag: "外骨骼·分节足", more: "体表外骨骼（保护防蒸发）；昆虫三对足两对翅" },
+    { n: "鸟和哺乳", r: "恒温动物", tag: "双重呼吸·胎生哺乳", more: "鸟：气囊辅助肺双重呼吸；哺乳：胎生哺乳、牙齿分化" }
+  ]},
+  { g: "微生物与分类", color: "#8a5a3a", list: [
+    { n: "细菌", r: "原核生物", tag: "无成形细胞核", more: "单细胞、分裂生殖、芽孢休眠；有的有荚膜和鞭毛" },
+    { n: "真菌", r: "真核生物", tag: "孢子生殖", more: "酵母菌（单细胞）、霉菌蘑菇（多细胞）；有成形细胞核" },
+    { n: "病毒", r: "最小最特殊", tag: "无细胞结构", more: "蛋白质外壳＋遗传物质；只能寄生在活细胞；分动物/植物/噬菌体" },
+    { n: "从种到界", r: "分类等级", tag: "界门纲目科属种", more: "7个等级由大到小；种最基本；林奈双名法＝属名＋种加词" }
+  ]}
+];
+
+var cbox = document.getElementById("cards-box");
+CARDS.forEach(function (group) {
+  var h = document.createElement("div");
+  h.className = "era-title";
+  h.innerHTML = '<span class="dot" style="background:' + group.color + '"></span>' +
+    '<span style="color:' + group.color + '">' + group.g + "</span>";
+  cbox.appendChild(h);
+  var grid = document.createElement("div");
+  grid.className = "grid";
+  group.list.forEach(function (p) {
+    var f = document.createElement("div");
+    f.className = "flip";
+    f.style.setProperty("--c", group.color);
+    f.innerHTML =
+      '<div class="inner">' +
+        '<div class="face front"><div class="name">' + p.n + '</div><div class="role">' + p.r + '</div><div class="hint">点我 翻面看考点</div></div>' +
+        '<div class="face back"><div class="tag">' + p.tag + '</div><div class="more">' + p.more + "</div></div>" +
+      "</div>";
+    f.addEventListener("click", function () { f.classList.toggle("flipped"); });
+    grid.appendChild(f);
+  });
+  cbox.appendChild(grid);
+});
+
+/* ================= 随机自测（18题） ================= */
+var QUIZ = [
+  { q: "除病毒外，生物体结构和功能的基本单位是？", opts: ["组织", "细胞", "器官", "系统"], a: 1, exp: "细胞是生物体结构和功能的基本单位（病毒除外）。" },
+  { q: "显微镜的目镜是10×，物镜是40×，放大倍数是？", opts: ["50倍", "400倍", "40倍", "410倍"], a: 1, exp: "放大倍数＝目镜×物镜＝10×40＝400倍。" },
+  { q: "物像位于视野的右上方，要让物像移到视野中央，玻片应向？", opts: ["左下方移动", "右上方移动", "左上方移动", "右下方移动"], a: 1, exp: "显微镜成倒像，物像偏哪边玻片就往哪边移（同向移动）。" },
+  { q: "制作人的口腔上皮细胞临时装片时，滴加的液体是？", opts: ["清水", "生理盐水", "碘液", "自来水"], a: 1, exp: "生理盐水维持细胞正常形态；植物细胞临时装片滴清水。染色才用碘液。" },
+  { q: "动物细胞没有、植物细胞特有的能量转换器是？", opts: ["线粒体", "细胞膜", "叶绿体", "细胞核"], a: 2, exp: "叶绿体进行光合作用，是植物特有的能量转换器；线粒体动植物都有。" },
+  { q: "细胞生命活动的控制中心、遗传信息库是？", opts: ["细胞膜", "细胞质", "液泡", "细胞核"], a: 3, exp: "细胞核内含DNA，是遗传信息库，也是细胞生命活动的控制中心。" },
+  { q: "细胞分裂过程中，变化最明显的结构是？", opts: ["细胞壁", "染色体", "液泡", "叶绿体"], a: 1, exp: "染色体先复制再平均分配到两个新细胞中，保持遗传物质稳定。" },
+  { q: "动物体的结构层次（由小到大）正确的是？", opts: ["细胞→器官→组织→个体", "细胞→组织→器官→系统→个体", "组织→细胞→器官→个体", "细胞→系统→器官→个体"], a: 1, exp: "动物体：细胞→组织→器官→系统→动物体（八大系统）。" },
+  { q: "植物体不具有的结构层次是？", opts: ["细胞", "组织", "系统", "器官"], a: 2, exp: "植物体没有系统这一层次：细胞→组织→器官→植物体。" },
+  { q: "苔藓植物常被用作监测空气污染的指示植物，因为它的叶？", opts: ["特别厚实", "只有一层细胞，对有害气体敏感", "能开花结果", "有发达的根"], a: 1, exp: "苔藓叶仅一层细胞，二氧化硫等有毒气体容易侵入，因此很敏感。" },
+  { q: "松树的种子裸露、无果皮包被，松树属于？", opts: ["被子植物", "蕨类植物", "裸子植物", "苔藓植物"], a: 2, exp: "裸子植物种子裸露；松、杉、银杏、苏铁都是裸子植物。" },
+  { q: "菜豆种子的营养物质主要储存在？", opts: ["胚乳", "子叶", "胚芽", "种皮"], a: 1, exp: "菜豆是双子叶植物，养分在两片肥厚的子叶里；玉米（单子叶）养分在胚乳。" },
+  { q: "鱼类在水中游泳的动力主要来自？", opts: ["胸鳍的摆动", "躯干部和尾部的摆动", "侧线感知", "鳞片摩擦"], a: 1, exp: "靠躯干部和尾部左右摆动产生前进动力，鳍起协调作用。" },
+  { q: "下列属于恒温动物的一组是？", opts: ["鱼和青蛙", "蛇和龟", "鸟类和哺乳类", "蝗虫和蚯蚓"], a: 2, exp: "只有鸟类和哺乳类体温恒定；鱼、两栖、爬行都是变温动物。" },
+  { q: "细菌与真菌在细胞结构上的根本区别是细菌？", opts: ["没有细胞壁", "没有成形的细胞核", "没有遗传物质", "没有细胞膜"], a: 1, exp: "细菌是原核生物，无成形细胞核；真菌是真核生物，有细胞核。" },
+  { q: "病毒的生活方式是？", opts: ["独立生活", "腐生", "必须寄生在活细胞里", "光合自养"], a: 2, exp: "病毒无细胞结构，不能独立生活，离开活细胞会变成结晶体。" },
+  { q: "生物分类的最基本单位是？", opts: ["界", "科", "属", "种"], a: 3, exp: "七个等级：界门纲目科属种，种是最基本分类单位，同种亲缘关系最近。" },
+  { q: "培养细菌和真菌的一般步骤是？", opts: ["接种→灭菌→培养→配制培养基", "配制培养基→高温灭菌→接种→恒温培养", "高温灭菌→接种→配制培养基→培养", "接种→恒温培养→灭菌→观察"], a: 1, exp: "先配培养基、再高温灭菌、冷却后接种、最后恒温培养——先灭菌再接种，防止杂菌污染。" }
+];
+
+var qCard = document.getElementById("quiz-card");
+var order = [], cur = 0, right = 0, wrongs = [];
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function startQuiz(pool) {
+  order = shuffle(pool);
+  cur = 0; right = 0; wrongs = [];
+  renderQ();
+}
+
+function renderQ() {
+  var qi = order[cur], item = QUIZ[qi];
+  var html = '<div class="quiz-progress"><span>第 ' + (cur + 1) + " / " + order.length + " 题</span><span>答对 " + right + "</span></div>" +
+    '<div class="quiz-q">' + item.q + "</div>" +
+    '<div class="quiz-opts">' +
+      item.opts.map(function (o, i) {
+        return '<button class="opt" data-i="' + i + '"><span class="idx">' + "ABCD"[i] + '.</span><span>' + o + "</span></button>";
+      }).join("") +
+    "</div>" +
+    '<div class="quiz-exp"></div>' +
+    '<button class="quiz-next">' + (cur === order.length - 1 ? "查看成绩 🏁" : "下一题 →") + "</button>";
+  qCard.innerHTML = html;
+  var opts = qCard.querySelectorAll(".opt");
+  opts.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (btn.disabled) return;
+      var i = parseInt(btn.getAttribute("data-i"), 10);
+      opts.forEach(function (b) { b.disabled = true; });
+      var ok = i === item.a;
+      if (ok) right++; else wrongs.push(qi);
+      opts[item.a].classList.add("correct");
+      if (!ok) btn.classList.add("wrong");
+      var exp = qCard.querySelector(".quiz-exp");
+      exp.style.display = "block";
+      exp.textContent = (ok ? "✓ 答对了！ " : "✗ 答错了～ ") + item.exp;
+      qCard.querySelector(".quiz-next").style.display = "block";
+    });
+  });
+  qCard.querySelector(".quiz-next").addEventListener("click", function () {
+    cur++;
+    if (cur < order.length) renderQ(); else showResult();
+  });
+}
+
+function showResult() {
+  var pct = Math.round(right / order.length * 100);
+  var msg = pct === 100 ? "满分！小小生物学家就是你 🌱" :
+    pct >= 80 ? "很棒啦，再刷一轮错题就完美 ✨" :
+    pct >= 60 ? "及格了！把错题里的口诀再念两遍 📖" : "别灰心，先去看知识路线，再来一次 💪";
+  var html = '<div class="quiz-result" style="display:block">' +
+    '<div class="quiz-score">' + right + " / " + order.length + "</div>" +
+    '<div class="msg">' + msg + "</div>" +
+    '<button class="primary" id="q-restart">再来一遍</button>' +
+    (wrongs.length ? '<button id="q-wrong">只刷错题（' + wrongs.length + "道）</button>" : "") +
+    "</div>";
+  qCard.innerHTML = html;
+  qCard.querySelector("#q-restart").addEventListener("click", function () { startQuiz(QUIZ.map(function (_, i) { return i; })); });
+  var wBtn = qCard.querySelector("#q-wrong");
+  if (wBtn) wBtn.addEventListener("click", function () { startQuiz(wrongs.slice()); });
+}
+
+startQuiz(QUIZ.map(function (_, i) { return i; }));
+
+/* ================= Tab 切换 ================= */
+var tabs = document.querySelectorAll("#tabs button");
+tabs.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    tabs.forEach(function (b) { b.classList.remove("on"); });
+    btn.classList.add("on");
+    document.querySelectorAll(".page").forEach(function (p) { p.classList.remove("on"); });
+    document.getElementById("page-" + btn.dataset.page).classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+</script>
+</body>
+</html>

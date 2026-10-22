@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1e6f8e">
+<title>初一地理 · 七年级上册记忆卡</title>
+<style>
+  :root {
+    --paper: #f2f6f3;
+    --card: #fffefa;
+    --ink: #2b3530;
+    --muted: #7d8a81;
+    --ocean: #1e6f8e;
+    --teal: #3a8f83;
+    --green: #4e8a5c;
+    --gold: #b8863b;
+    --terra: #a05252;
+    --line: #d9e3da;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    padding-bottom: 88px;
+  }
+  h1, h2, h3, .serif { font-family: "Songti SC", "STSong", "SimSun", Georgia, serif; }
+
+  header {
+    background: linear-gradient(160deg, #14495e, var(--ocean) 55%, #2f8a96);
+    color: #f0f8f6;
+    text-align: center;
+    padding: 34px 18px 26px;
+    border-bottom: 4px solid var(--gold);
+  }
+  header .seal {
+    display: inline-block;
+    border: 2px solid rgba(240,248,246,.75);
+    border-radius: 10px;
+    padding: 14px 26px;
+    font-size: 26px;
+    letter-spacing: 8px;
+    font-weight: 700;
+  }
+  header .sub { margin-top: 10px; font-size: 13px; opacity: .85; letter-spacing: 2px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex;
+    background: rgba(242,246,243,.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav button {
+    flex: 1 0 auto;
+    border: none; background: none;
+    font: inherit; font-size: 15px;
+    padding: 13px 14px;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  nav button.on { color: var(--ocean); border-bottom-color: var(--ocean); font-weight: 600; }
+
+  main { max-width: 680px; margin: 0 auto; padding: 18px 14px 30px; }
+  .page { display: none; }
+  .page.on { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .tip {
+    background: #e7f0ea;
+    border: 1px dashed var(--teal);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #476b5c;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- 知识路线（时间轴） ---------- */
+  .era-title {
+    display: flex; align-items: center; gap: 10px;
+    margin: 26px 0 12px;
+    font-size: 17px; font-weight: 700;
+  }
+  .era-title .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .era-title .tag { font-size: 11px; color: #fff; border-radius: 6px; padding: 2px 8px; letter-spacing: 1px; }
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--line);
+  }
+  .node { position: relative; margin-bottom: 12px; }
+  .node::before {
+    content: ""; position: absolute; left: -25px; top: 16px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--paper); border: 3px solid var(--dotc, var(--ocean));
+  }
+  .node-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(30,80,70,.08);
+  }
+  .node-head {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+  }
+  .node-head .date {
+    font-size: 12px; font-weight: 700; white-space: nowrap;
+    color: var(--dotc, var(--ocean));
+    min-width: 52px;
+    font-family: Georgia, serif;
+  }
+  .node-head .t { font-weight: 600; font-size: 15.5px; }
+  .node-head .arrow { margin-left: auto; color: var(--muted); font-size: 12px; transition: transform .2s; }
+  .node.open .arrow { transform: rotate(90deg); }
+  .node-body { display: none; padding: 2px 14px 13px; border-top: 1px dashed var(--line); }
+  .node.open .node-body { display: block; }
+  .node-body li {
+    list-style: none;
+    font-size: 14px;
+    padding: 4px 0 4px 18px;
+    position: relative;
+    color: #3f4a44;
+  }
+  .node-body li::before {
+    content: "·"; position: absolute; left: 6px;
+    color: var(--dotc, var(--ocean)); font-weight: 700;
+  }
+  .node-body .kw {
+    display: inline-block;
+    background: rgba(30,111,142,.08);
+    color: var(--ocean);
+    border-radius: 5px;
+    padding: 0 6px;
+    font-size: 13px;
+    margin: 2px 0;
+  }
+
+  /* ---------- 口诀 ---------- */
+  .rhyme {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--ocean);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .rhyme h3 { font-size: 15px; color: var(--ocean); margin-bottom: 6px; }
+  .rhyme .verse {
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    font-size: 16.5px;
+    letter-spacing: 1px;
+    color: var(--ink);
+    white-space: pre-line;
+  }
+  .rhyme .note { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  table.num { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card); border-radius: 10px; overflow: hidden; }
+  table.num th, table.num td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; }
+  table.num th { background: #e7f0ea; font-size: 13px; color: #476b5c; }
+  table.num td.d { font-family: Georgia, serif; font-weight: 700; color: var(--ocean); white-space: nowrap; }
+
+  /* ---------- 概念翻转卡 ---------- */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 480px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  .flip { perspective: 800px; height: 118px; cursor: pointer; }
+  .flip .inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .35s;
+    transform-style: preserve-3d;
+  }
+  .flip.flipped .inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 8px; text-align: center;
+  }
+  .face.front {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--c, var(--ocean));
+  }
+  .face.front .name { font-family: "Songti SC", serif; font-size: 16.5px; font-weight: 700; }
+  .face.front .role { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .face.front .hint { font-size: 10px; color: #b9c6bd; margin-top: 6px; }
+  .face.back {
+    background: linear-gradient(150deg, var(--c, var(--ocean)), color-mix(in srgb, var(--c, var(--ocean)) 72%, black));
+    color: #f0f8f6;
+    transform: rotateY(180deg);
+    font-size: 12px;
+    line-height: 1.5;
+    overflow: hidden;
+  }
+  .face.back .tag { font-size: 14.5px; font-weight: 700; letter-spacing: 1px; }
+  .face.back .more { margin-top: 4px; opacity: .92; }
+
+  /* ---------- 随机自测 ---------- */
+  .quiz-card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 16px 18px;
+    box-shadow: 0 1px 3px rgba(30,80,70,.08);
+  }
+  .quiz-progress { font-size: 12px; color: var(--muted); margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .quiz-q { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    text-align: left; border: 1.5px solid var(--line); background: #fbfdfb;
+    border-radius: 10px; padding: 11px 12px; font: inherit; font-size: 14px;
+    cursor: pointer; display: flex; gap: 8px; align-items: flex-start; min-height: 40px; color: var(--ink);
+  }
+  .opt .idx { font-weight: 700; color: var(--ocean); }
+  .opt.correct { border-color: var(--green); background: #eaf4ea; }
+  .opt.wrong { border-color: #c0564d; background: #f9e9e7; }
+  .opt:disabled { cursor: default; }
+  .quiz-exp {
+    display: none; margin-top: 10px; font-size: 13px; color: #3f4a44;
+    background: #eaf3ec; border-left: 3px solid var(--green); padding: 8px 10px; border-radius: 8px;
+  }
+  .quiz-next {
+    display: none; margin-top: 12px; width: 100%; border: none;
+    background: var(--ocean); color: #fff; font: inherit; font-size: 15px;
+    padding: 12px; border-radius: 10px; cursor: pointer;
+  }
+  .quiz-result { text-align: center; padding: 26px 10px; display: none; }
+  .quiz-score { font-size: 44px; font-weight: 800; color: var(--ocean); font-family: Georgia, serif; }
+  .quiz-result .msg { font-size: 14px; color: #3f4a44; margin: 8px 0 16px; }
+  .quiz-result button {
+    border: 1.5px solid var(--ocean); background: #fbfdfb; color: var(--ocean);
+    font: inherit; font-size: 14px; padding: 10px 16px; border-radius: 10px; margin: 0 5px; cursor: pointer;
+  }
+  .quiz-result button.primary { background: var(--ocean); color: #fff; }
+
+  /* ---------- 怎么用 ---------- */
+  .method {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
+  }
+  .method h3 { font-size: 15.5px; color: var(--ocean); margin-bottom: 6px; }
+  .method p { font-size: 14px; color: #3f4a44; }
+  .method .step { font-weight: 700; }
+
+  footer {
+    text-align: center; padding: 20px 16px 26px;
+    font-size: 12px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="seal serif">山海·经纬</div>
+  <div class="sub">初一地理 · 七年级上册 · 湘教版（2024新版）· 睡前刷一刷</div>
+</header>
+
+<nav id="tabs">
+  <button class="on" data-page="route">🧭 知识路线</button>
+  <button data-page="rhyme">📜 口诀</button>
+  <button data-page="cards">🏔 概念卡</button>
+  <button data-page="quiz">🎯 随机自测</button>
+  <button data-page="howto">💡 怎么用</button>
+</nav>
+
+<main>
+  <!-- ============ 知识路线 ============ -->
+  <section class="page on" id="page-route">
+    <div class="tip">👆 点开每个节点查看考点要点。先从「第一章·让我们走进地理」顺到「第六章·世界的发展差异」，再合上手机，试着把六站讲一遍。</div>
+    <div id="route-box"></div>
+  </section>
+
+  <!-- ============ 口诀 ============ -->
+  <section class="page" id="page-rhyme">
+    <div class="tip">口诀先读顺、再抄一遍，比死背快得多。</div>
+
+    <div class="rhyme">
+      <h3>① 七大洲面积排序（由大到小）</h3>
+      <div class="verse">亚非北南美，
+南极欧大洋。</div>
+      <div class="note">亚洲最大（约4400万km²），大洋洲最小。选择题常考"第二大洲是非洲"。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>② 四大洋面积排序（由大到小）</h3>
+      <div class="verse">太大印北。</div>
+      <div class="note">太平洋最大，北冰洋最小、跨经度最广（所有经线都汇到极点）。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>③ 东西半球分界线</h3>
+      <div class="verse">西经二十度，东经百六十；
+两线围一圈，半球分东西。</div>
+      <div class="note">20°W 和 160°E 组成的经线圈。别选 0° 和 180°——那会把欧洲、非洲从中间切开！</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>④ 五带划分</h3>
+      <div class="verse">回归之间是热带，
+回归极圈温带来，
+极圈以内寒带待。</div>
+      <div class="note">热带有太阳直射；温带既无直射也无极昼极夜；寒带有极昼极夜。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑤ 地球的运动</h3>
+      <div class="verse">自转一天昼夜换，
+公转一年四季变。</div>
+      <div class="note">都自西向东。自转→昼夜交替、时间差异；公转→四季、五带、昼夜长短变化。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑥ 大洲分界线</h3>
+      <div class="verse">亚欧分界：乌乌里大黑土；
+苏伊士，亚非隔；
+巴拿马，南北美；
+白令峡，亚北美。</div>
+      <div class="note">「乌乌里大黑土」＝乌拉尔山脉—乌拉尔河—里海—大高加索山脉—黑海—土耳其海峡。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑦ 六大板块</h3>
+      <div class="verse">亚欧非洲美洲陆，
+太平洋、印度洋，
+还有南极六大块。</div>
+      <div class="note">六大板块：亚欧、非洲、美洲、太平洋、印度洋、南极洲。太平洋板块几乎全是海洋。内部稳定，交界多火山地震。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑧ 等高线判读</h3>
+      <div class="verse">凸低为脊凸高谷，
+密陡疏缓记清楚；
+等高线重叠，陡崖可攀岩。</div>
+      <div class="note">山谷（凸向高处）是集水线，可能发育河流；山脊（凸向低处）是分水线。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑨ 气温垂直变化</h3>
+      <div class="verse">海拔升高一百米，
+气温约降点六度。</div>
+      <div class="note">0.6℃/100米。所以"同纬度，山上冷、山下热"，横断山区"一山有四季"。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑩ 必背数字表（考场上值 10 分）</h3>
+      <table class="num">
+        <tr><th>数字</th><th>一句话记</th></tr>
+        <tr><td class="d">6371 km</td><td>地球平均半径</td></tr>
+        <tr><td class="d">约4万 km</td><td>赤道周长</td></tr>
+        <tr><td class="d">约5.1亿 km²</td><td>地球表面积</td></tr>
+        <tr><td class="d">23.5°</td><td>南、北回归线的度数</td></tr>
+        <tr><td class="d">66.5°</td><td>南、北极圈的度数</td></tr>
+        <tr><td class="d">20°W / 160°E</td><td>东西半球分界线</td></tr>
+        <tr><td class="d">0.6℃</td><td>海拔每升高100米的降温</td></tr>
+        <tr><td class="d">8848.86米</td><td>珠穆朗玛峰高程（世界最高峰）</td></tr>
+        <tr><td class="d">6 / 2</td><td>六大板块 / 两大火山地震带</td></tr>
+        <tr><td class="d">三分 / 七分</td><td>地球表面三分陆地、七分海洋</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 概念卡 ============ -->
+  <section class="page" id="page-cards">
+    <div class="tip">👇 先看概念猜答案，点卡片翻面对答案。全对的卡就跳过，只刷翻错的。</div>
+    <div id="cards-box"></div>
+  </section>
+
+  <!-- ============ 随机自测 ============ -->
+  <section class="page" id="page-quiz">
+    <div class="tip">每次题目顺序随机。选错不要紧，看一眼解析，记住就算赢。</div>
+    <div class="quiz-card" id="quiz-card"></div>
+  </section>
+
+  <!-- ============ 怎么用 ============ -->
+  <section class="page" id="page-howto">
+    <div class="method">
+      <h3>🌙 每晚 10 分钟：讲图法</h3>
+      <p><span class="step">①</span> 打开知识路线，从头顺一遍（1 分钟）；<br>
+      <span class="step">②</span> 合上手机，摊开地球仪或地图册，把这一章讲给爸妈听（5 分钟）；<br>
+      <span class="step">③</span> 卡壳的地方，点开对应节点只看那一个（4 分钟）。</p>
+    </div>
+    <div class="method">
+      <h3>🃏 碎片时间：刷概念卡</h3>
+      <p>排队、坐车、课间，翻两轮概念卡。翻错的第二天再刷一遍——只跟"没记住的"较劲，不要从头背。</p>
+    </div>
+    <div class="method">
+      <h3>📅 周末 20 分钟：整体过线</h3>
+      <p>把知识路线从「我们身边的地理」到「国际合作」完整讲一遍。哪一站讲不顺，就说明那里要补；再来一轮随机自测，正确率 15/18 以上就稳了。</p>
+    </div>
+    <div class="method">
+      <h3>✍️ 考试小提醒</h3>
+      <p>地理大题是<b>踩点给分</b>：记"关键词"不背整段（半球分界→20°W和160°E｜板块交界→多火山地震｜聚落→近水源、地形平坦）。看到"分布规律"题，先想<b>纬度、海陆、地形</b>三个角度。</p>
+    </div>
+    <div class="tip" style="margin-top:4px">📱 建议用 Safari 打开后「分享 → 添加到主屏幕」，像 App 一样点开就刷。</div>
+  </section>
+</main>
+
+<footer>
+  湘教版《地理》七年级上册（2024新版） · 配合"睡前讲图法"使用<br>
+  内容供复习参考，以课本和老师讲授为准
+</footer>
+
+<script>
+/* ================= 知识路线数据（湘教版2024·六章16节点） ================= */
+var ERAS = [
+  { name: "第一章 · 让我们走进地理", tag: "第一章", color: "#1e6f8e", nodes: [
+    { date: "§1.1", title: "我们身边的地理", pts: ["地理研究两大方面：<b>自然环境</b>（地形、气候、河流、生物）与<b>人文环境</b>（人口、城市、农业、交通、文化）", "衣食住行、天气预报、旅行路线……生活处处有<b>地理</b>", "生产建设也离不开地理：农业讲「因地制宜」，城市多沿河沿海分布"] },
+    { date: "§1.2", title: "我们怎样学地理", pts: ["地图三要素：<b>比例尺、方向、图例</b>", "比例尺＝图上距离÷实地距离；<b>分母越大比例尺越小</b>，表示范围越大、内容越略", "方向三种定向：一般定向法（<b>上北下南、左西右东</b>）、指向标定向、经纬网定向", "学地理还要会<b>收集地理信息</b>（读图、查资料、实地考察）并善于思考地理问题"] }
+  ]},
+  { name: "第二章 · 认识地球", tag: "第二章", color: "#3a8f83", nodes: [
+    { date: "§2.1", title: "地球与地球仪", pts: ["地球是太阳系八大行星之一，目前已知<b>唯一存在生命</b>的星球——有适宜的温度、液态水、适合生物呼吸的大气", "形状证据链：天圆地方 → 依据日月形状推测 → <b>麦哲伦环球航行</b>首次证明 → 卫星影像（最直观）", "大小三数据：平均半径<b>6371千米</b>、赤道周长约<b>4万千米</b>、表面积约<b>5.1亿km²</b>", "纬线：圆、相互平行、指示<b>东西</b>，赤道最长向两极递减；经线：半圆、等长、汇于两极、指示<b>南北</b>", "特殊纬线：赤道0°、回归线<span class='kw'>23.5°</span>、极圈<span class='kw'>66.5°</span>", "半球划分：赤道分南北；<span class='kw'>20°W 和 160°E</span> 分东西；0°–30°低纬、30°–60°中纬、60°–90°高纬"] },
+    { date: "§2.2", title: "地球的运动", pts: ["<b>自转</b>：自西向东，周期<b>一天</b>→昼夜交替、时间差异（东边先看到日出）", "<b>公转</b>：自西向东，周期<b>一年</b>→四季变化、昼夜长短变化、五带划分", "二分二至：春分3月21日前后、夏至6月22日前后、秋分9月23日前后、冬至12月22日前后", "五带：热带有<b>直射</b>；温带两样都没有；寒带有<b>极昼极夜</b>"] }
+  ]},
+  { name: "第三章 · 地球的面貌", tag: "第三章", color: "#4e8a5c", nodes: [
+    { date: "§3.1", title: "世界的海陆分布", pts: ["地球表面<b>三分陆地、七分海洋</b>", "七大洲由大到小：<span class='kw'>亚非北南美，南极欧大洋</span>", "四大洋：<span class='kw'>太大印北</span>（太平洋最大，北冰洋最小且跨经度最广）", "洲界线：亚欧—乌乌里大黑土；亚非—<b>苏伊士运河</b>；南北美—<b>巴拿马运河</b>；亚洲北美—<b>白令海峡</b>"] },
+    { date: "§3.2", title: "世界的地形", pts: ["海拔＝高出海平面；相对高度＝两地的海拔差", "五种基本地形：山地、高原、平原、丘陵、盆地", "世界之最：最高峰<b>珠穆朗玛峰</b>（8848.86米）；最长山脉<b>安第斯山脉</b>；最大平原<b>亚马孙平原</b>；最高高原<b>青藏高原</b>（最大高原是巴西高原）", "等高线<b>密陡疏缓</b>；闭合中高为<b>山顶</b>，闭合中低为盆地（洼地）", "<span class='kw'>凸低为脊，凸高为谷</span>：山谷是集水线，可能发育河流；两山顶之间为<b>鞍部</b>；等高线<b>重叠</b>为陡崖（可攀岩）"] },
+    { date: "§3.3", title: "海陆变迁", pts: ["<b>大陆漂移学说</b>：魏格纳提出；证据——大西洋两岸轮廓吻合、生物相似", "<b>板块构造学说</b>：全球分六大板块，<b>内部稳定、交界活跃</b>；太平洋板块几乎全是海洋", "碰撞挤压→形成山脉（喜马拉雅）；张裂→形成裂谷或海洋（<b>红海不断扩张</b>、地中海在缩小）", "两大火山地震带：<b>环太平洋</b>火山地震带、<b>地中海—喜马拉雅</b>火山地震带"] }
+  ]},
+  { name: "第四章 · 世界的居民与文化", tag: "第四章", color: "#a05252", nodes: [
+    { date: "§4.1", title: "世界的人口", pts: ["人口自然增长率＝<b>出生率－死亡率</b>；人口密度＝总人口÷面积", "四大稠密区：<b>东亚、南亚、欧洲西部、北美洲东部</b>（中低纬近海平原）", "四类稀疏区：干旱沙漠、湿热雨林、高寒高原、严寒极地", "三大人种：白色、黄色、黑色人种（无优劣之分）"] },
+    { date: "§4.2", title: "世界的聚落", pts: ["聚落分<b>乡村和城市</b>：乡村以农业为主，城市以非农业为主", "聚落多形成于<b>地形平坦、水源充足、土壤肥沃、交通便利</b>之处", "传统聚落是<b>文化遗产</b>，要加以保护"] },
+    { date: "§4.3", title: "丰富多彩的世界文化", pts: ["联合国工作语言：<b>汉语、英语、法语、俄语、西班牙语、阿拉伯语</b>；汉语用得最多，英语范围最广", "三大宗教：<b>基督教</b>（教堂，信徒最多）、<b>伊斯兰教</b>（清真寺）、<b>佛教</b>（寺庙）", "民居、服饰、饮食都要<b>适应当地自然环境</b>"] }
+  ]},
+  { name: "第五章 · 世界的气候", tag: "第五章", color: "#b8863b", nodes: [
+    { date: "§5.1", title: "天气与天气预报", pts: ["天气特点：<b>短时间内、多变</b>；气候：<b>长时间、稳定</b>", "天气预报关注气温、降水、风向风力、阴晴"] },
+    { date: "§5.2", title: "气温和降水", pts: ["一天中最高气温在<b>午后2时</b>左右，最低在<b>日出前后</b>", "北半球陆地最热月<b>7月</b>、海洋<b>8月</b>（南半球相反）", "世界气温分布：从<b>低纬向高纬递减</b>；同纬度夏季陆地高于海洋；山地海拔每升高<b>100米约降0.6℃</b>", "降水的主要形式是<b>降雨</b>；分布规律：<b>赤道多、两极少</b>；回归线附近大陆<b>东岸多、西岸少</b>；中纬度<b>沿海多、内陆少</b>"] },
+    { date: "§5.3", title: "影响气候的因素", pts: ["三大因素：<b>纬度位置、海陆位置、地形地势</b>", "纬度→热量从低纬向高纬递减；海陆→沿海温和湿润、内陆干旱且温差大", "地形→<b>迎风坡多雨、背风坡少雨</b>；山上冷、山下热"] },
+    { date: "§5.4", title: "世界主要气候类型", pts: ["热带：雨林（全年高温多雨）、草原（干湿分明）、季风（雨热同期）、沙漠（全年炎热干燥）", "亚热带／温带：亚热带季风、<b>地中海气候</b>（夏季炎热干燥、冬季温和多雨）、<b>温带海洋性</b>（全年温和湿润）、温带季风（夏热多雨、冬冷干）、温带大陆性", "寒带与高原山地：寒带终年严寒；高原山地气候<b>垂直变化</b>明显"] }
+  ]},
+  { name: "第六章 · 世界的发展差异", tag: "第六章", color: "#7a6aa0", nodes: [
+    { date: "§6.1", title: "发展中国家与发达国家", pts: ["全世界220多个国家和地区", "<b>发达国家</b>主要集中在<b>欧洲西部</b>，还有北美、大洋洲；发展中国家数量多，主要分布在亚洲、非洲、拉丁美洲", "发达国家多在北、发展中国家多在南：发达国家与发展中国家之间商谈＝<b>南北对话</b>；发展中国家间互助＝<b>南南合作</b>"] },
+    { date: "§6.2", title: "国际合作", pts: ["经济全球化：资源、技术、人才、信息共享，各国联系日益紧密", "重要国际组织：<b>联合国</b>（UN，1945年成立，总部纽约）、<b>世界贸易组织</b>（WTO，总部日内瓦）"] }
+  ]}
+];
+
+var box = document.getElementById("route-box");
+ERAS.forEach(function (era) {
+  var h = document.createElement("div");
+  h.className = "era-title";
+  h.innerHTML = '<span class="dot" style="background:' + era.color + '"></span>' +
+    '<span class="tag" style="background:' + era.color + '">' + era.tag + "</span>" +
+    '<span style="color:' + era.color + '">' + era.name + "</span>";
+  box.appendChild(h);
+  var tl = document.createElement("div");
+  tl.className = "timeline";
+  era.nodes.forEach(function (n) {
+    var d = document.createElement("div");
+    d.className = "node";
+    d.style.setProperty("--dotc", era.color);
+    d.innerHTML =
+      '<div class="node-card">' +
+        '<div class="node-head"><span class="date">' + n.date + '</span><span class="t">' + n.title + '</span><span class="arrow">▶</span></div>' +
+        '<div class="node-body"><ul>' + n.pts.map(function (p) { return "<li>" + p + "</li>"; }).join("") + "</ul></div>" +
+      "</div>";
+    d.querySelector(".node-head").addEventListener("click", function () { d.classList.toggle("open"); });
+    tl.appendChild(d);
+  });
+  box.appendChild(tl);
+});
+
+/* ================= 概念卡数据（4组20张） ================= */
+var CARDS = [
+  { g: "地球与经纬", color: "#1e6f8e", list: [
+    { n: "纬线", r: "横着的圈", tag: "东西方向", more: "都是圆、相互平行；赤道最长，向两极递减；指示东西方向" },
+    { n: "经线", r: "竖着的线", tag: "南北方向", more: "都是半圆、长度相等、相交于南北两极；指示南北方向" },
+    { n: "本初子午线", r: "经度的起点", tag: "0°经线", more: "经过英国格林尼治天文台旧址；以东为东经，以西为西经" },
+    { n: "东西半球分界", r: "两条经线围一圈", tag: "20°W·160°E", more: "20°W 和 160°E 组成的经线圈；避免把欧洲、非洲切开" },
+    { n: "五带", r: "以回归线、极圈为界", tag: "热·温·寒", more: "热带有直射；温带无直射无极昼极夜；寒带有极昼极夜" }
+  ]},
+  { g: "地图技能", color: "#3a8f83", list: [
+    { n: "比例尺", r: "地图三要素之一", tag: "图上÷实地", more: "分母越大比例尺越小，范围越大内容越略；画学校平面图用大比例尺" },
+    { n: "方向的确定", r: "地图三要素之一", tag: "三种定向", more: "一般定向：上北下南、左西右东；指向标定向；经纬网定向——经线指南北、纬线指东西" },
+    { n: "等高线疏密", r: "坡度的信号", tag: "密陡疏缓", more: "等高线密集＝坡陡；稀疏＝坡缓" },
+    { n: "山脊 · 山谷", r: "等高线凸向定乾坤", tag: "凸低脊·凸高谷", more: "凸向低处是山脊（分水线）；凸向高处是山谷（集水线，可能发育河流）" },
+    { n: "陡崖 · 鞍部", r: "特殊部位", tag: "重叠崖·两峰鞍", more: "等高线重叠是陡崖（可攀岩）；两个山顶之间是鞍部" }
+  ]},
+  { g: "海陆与板块", color: "#4e8a5c", list: [
+    { n: "大陆漂移说", r: "谁提出的？", tag: "魏格纳", more: "证据：大西洋两岸轮廓吻合、南美与非洲生物相似" },
+    { n: "板块构造学说", r: "解释海陆变迁", tag: "六大板块", more: "全球分六大板块；内部地壳稳定，交界处多火山、地震" },
+    { n: "两大火山地震带", r: "地震去哪找？", tag: "环太平洋", more: "环太平洋火山地震带、地中海—喜马拉雅火山地震带" },
+    { n: "大洲大洋之最", r: "面积与跨度", tag: "亚最大·太平最大", more: "最大洲亚洲、最小洲大洋洲；最大洋太平洋；跨经度最广南极洲（大洋北冰洋）" }
+  ]},
+  { g: "气候·居民·发展", color: "#a05252", list: [
+    { n: "天气 vs 气候", r: "一字之差", tag: "短变·长稳", more: "天气：短时间、多变；气候：长时间、稳定" },
+    { n: "世界气温分布", r: "看纬度", tag: "低纬高·高纬低", more: "从低纬向高纬递减；同纬度夏季陆地＞海洋；山地海拔升100米降约0.6℃" },
+    { n: "世界降水规律", r: "三句话", tag: "赤多·极少", more: "赤道多、两极少；回归线附近大陆东岸多、西岸少；中纬度沿海多、内陆少" },
+    { n: "四大人口稠密区", r: "人往哪挤？", tag: "中低纬·近海", more: "东亚、南亚、欧洲西部、北美洲东部——中低纬度的近海平原" },
+    { n: "三大宗教", r: "建筑认一认", tag: "基·伊·佛", more: "基督教（教堂，信徒最多）、伊斯兰教（清真寺）、佛教（寺庙）" },
+    { n: "南北对话·南南合作", r: "发展与合作关键词", tag: "南南合作", more: "发达国家多在北、发展中国家多在南；发展中国家与发达国家商谈＝南北对话；发展中国家间互助＝南南合作" }
+  ]}
+];
+
+var cbox = document.getElementById("cards-box");
+CARDS.forEach(function (group) {
+  var h = document.createElement("div");
+  h.className = "era-title";
+  h.innerHTML = '<span class="dot" style="background:' + group.color + '"></span>' +
+    '<span style="color:' + group.color + '">' + group.g + "</span>";
+  cbox.appendChild(h);
+  var grid = document.createElement("div");
+  grid.className = "grid";
+  group.list.forEach(function (p) {
+    var f = document.createElement("div");
+    f.className = "flip";
+    f.style.setProperty("--c", group.color);
+    f.innerHTML =
+      '<div class="inner">' +
+        '<div class="face front"><div class="name">' + p.n + '</div><div class="role">' + p.r + '</div><div class="hint">点我 翻面看考点</div></div>' +
+        '<div class="face back"><div class="tag">' + p.tag + '</div><div class="more">' + p.more + "</div></div>" +
+      "</div>";
+    f.addEventListener("click", function () { f.classList.toggle("flipped"); });
+    grid.appendChild(f);
+  });
+  cbox.appendChild(grid);
+});
+
+/* ================= 随机自测（18题） ================= */
+var QUIZ = [
+  { q: "地球的平均半径约为多少千米？", opts: ["6371千米", "4万千米", "5.1亿千米", "6666千米"], a: 0, exp: "平均半径6371千米；赤道周长约4万千米；表面积约5.1亿km²。" },
+  { q: "东西半球的分界线是？", opts: ["0°和180°组成的经线圈", "20°W和160°E组成的经线圈", "20°E和160°W组成的经线圈", "赤道"], a: 1, exp: "20°W＋160°E，这样才不会把欧洲、非洲从中间切开。" },
+  { q: "地球自转产生的地理现象是？", opts: ["四季变化", "昼夜交替", "五带划分", "昼夜长短的季节变化"], a: 1, exp: "自转→昼夜交替、时间差异；公转→四季、五带、昼夜长短变化。" },
+  { q: "中纬度的范围是？", opts: ["0°–30°", "30°–60°", "60°–90°", "23.5°–66.5°"], a: 1, exp: "低纬0°–30°，中纬30°–60°，高纬60°–90°。" },
+  { q: "下列关于比例尺的说法，正确的是？", opts: ["分母越大，比例尺越大", "图幅相同，比例尺越大，表示范围越小、内容越详细", "绘制学校平面图应选小比例尺", "比例尺＝实地距离÷图上距离"], a: 1, exp: "分母越大比例尺越小；范围小的图（学校平面图）要选大比例尺。公式是图上距离÷实地距离。" },
+  { q: "等高线向高处凸出的地形部位是？", opts: ["山脊", "山谷", "鞍部", "陡崖"], a: 1, exp: "凸高为谷——山谷是集水线，可能发育河流；凸低为脊。" },
+  { q: "七大洲中面积最大的是？", opts: ["非洲", "北美洲", "亚洲", "欧洲"], a: 2, exp: "口诀：亚非北南美，南极欧大洋。亚洲约4400万km²。" },
+  { q: "亚洲与非洲的分界线是？", opts: ["巴拿马运河", "苏伊士运河", "白令海峡", "土耳其海峡"], a: 1, exp: "苏伊士运河分亚非；巴拿马运河南北美；白令海峡分亚洲与北美洲。" },
+  { q: "板块发生张裂运动的地区，常常会？", opts: ["隆起形成高大山脉", "形成裂谷或新的海洋", "地壳变得十分稳定", "不再发生地震"], a: 1, exp: "张裂→裂谷或海洋（红海在不断扩张）；碰撞挤压→形成山脉（喜马拉雅）。" },
+  { q: "世界火山、地震主要分布在？", opts: ["板块内部", "板块与板块的交界地带", "大洋中心", "高纬度地区"], a: 1, exp: "板块内部稳定、交界活跃。两大火山地震带：环太平洋、地中海—喜马拉雅。" },
+  { q: "北半球陆地上一年中气温最高的月份一般是？", opts: ["1月", "7月", "8月", "12月"], a: 1, exp: "北半球陆地7月最高、海洋8月最高；南半球相反。" },
+  { q: "海拔每升高100米，气温约下降？", opts: ["6℃", "0.6℃", "0.06℃", "6.6℃"], a: 1, exp: "0.6℃/100米。所以同纬度山地「一山有四季」。" },
+  { q: "有极昼、极夜现象的温度带是？", opts: ["热带", "温带", "寒带", "三个带都有"], a: 2, exp: "寒带（极圈以内）有极昼极夜；热带有太阳直射；温带两样都没有。" },
+  { q: "热带雨林气候的特点是？", opts: ["全年高温多雨", "全年炎热干燥", "夏季炎热干燥、冬季温和多雨", "四季分明"], a: 0, exp: "热带雨林：全年高温多雨（亚马孙平原、刚果盆地、马来群岛）。" },
+  { q: "世界上使用人数最多的语言是？", opts: ["英语", "汉语", "法语", "西班牙语"], a: 1, exp: "汉语使用人数最多；英语使用范围最广。六种联合国工作语言：汉英法俄西阿。" },
+  { q: "世界上信徒最多的宗教是？", opts: ["佛教", "伊斯兰教", "基督教", "道教"], a: 2, exp: "基督教＞伊斯兰教＞佛教。三大宗教代表建筑：教堂、清真寺、寺庙。" },
+  { q: "世界人口主要分布在中低纬度的？", opts: ["近海平原地区", "内陆高原地区", "沙漠绿洲地区", "高纬度地区"], a: 0, exp: "四大稠密区：东亚、南亚、欧洲西部、北美洲东部。" },
+  { q: "发达国家最为集中的地区是？", opts: ["撒哈拉以南非洲", "欧洲西部", "拉丁美洲", "东亚"], a: 1, exp: "发达国家集中在欧洲西部及北美、大洋洲；发展中国家间互助叫南南合作。" }
+];
+
+var qCard = document.getElementById("quiz-card");
+var order = [], cur = 0, right = 0, wrongs = [];
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function startQuiz(pool) {
+  order = shuffle(pool);
+  cur = 0; right = 0; wrongs = [];
+  renderQ();
+}
+
+function renderQ() {
+  var qi = order[cur], item = QUIZ[qi];
+  var html = '<div class="quiz-progress"><span>第 ' + (cur + 1) + " / " + order.length + " 题</span><span>答对 " + right + "</span></div>" +
+    '<div class="quiz-q">' + item.q + "</div>" +
+    '<div class="quiz-opts">' +
+      item.opts.map(function (o, i) {
+        return '<button class="opt" data-i="' + i + '"><span class="idx">' + "ABCD"[i] + '.</span><span>' + o + "</span></button>";
+      }).join("") +
+    "</div>" +
+    '<div class="quiz-exp"></div>' +
+    '<button class="quiz-next">' + (cur === order.length - 1 ? "查看成绩 🏁" : "下一题 →") + "</button>";
+  qCard.innerHTML = html;
+  var opts = qCard.querySelectorAll(".opt");
+  opts.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (btn.disabled) return;
+      var i = parseInt(btn.getAttribute("data-i"), 10);
+      opts.forEach(function (b) { b.disabled = true; });
+      var ok = i === item.a;
+      if (ok) right++; else wrongs.push(qi);
+      opts[item.a].classList.add("correct");
+      if (!ok) btn.classList.add("wrong");
+      var exp = qCard.querySelector(".quiz-exp");
+      exp.style.display = "block";
+      exp.textContent = (ok ? "✓ 答对了！ " : "✗ 答错了～ ") + item.exp;
+      qCard.querySelector(".quiz-next").style.display = "block";
+    });
+  });
+  qCard.querySelector(".quiz-next").addEventListener("click", function () {
+    cur++;
+    if (cur < order.length) renderQ(); else showResult();
+  });
+}
+
+function showResult() {
+  var pct = Math.round(right / order.length * 100);
+  var msg = pct === 100 ? "满分！地理小达人就是你了 🌏" :
+    pct >= 80 ? "很棒啦，再刷一轮错题就完美 ✨" :
+    pct >= 60 ? "及格了！把错题里的口诀再念两遍 📖" : "别灰心，先去看知识路线，再来一次 💪";
+  var html = '<div class="quiz-result" style="display:block">' +
+    '<div class="quiz-score">' + right + " / " + order.length + "</div>" +
+    '<div class="msg">' + msg + "</div>" +
+    '<button class="primary" id="q-restart">再来一遍</button>' +
+    (wrongs.length ? '<button id="q-wrong">只刷错题（' + wrongs.length + "道）</button>" : "") +
+    "</div>";
+  qCard.innerHTML = html;
+  qCard.querySelector("#q-restart").addEventListener("click", function () { startQuiz(QUIZ.map(function (_, i) { return i; })); });
+  var wBtn = qCard.querySelector("#q-wrong");
+  if (wBtn) wBtn.addEventListener("click", function () { startQuiz(wrongs.slice()); });
+}
+
+startQuiz(QUIZ.map(function (_, i) { return i; }));
+
+/* ================= Tab 切换 ================= */
+var tabs = document.querySelectorAll("#tabs button");
+tabs.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    tabs.forEach(function (b) { b.classList.remove("on"); });
+    btn.classList.add("on");
+    document.querySelectorAll(".page").forEach(function (p) { p.classList.remove("on"); });
+    document.getElementById("page-" + btn.dataset.page).classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3d5a80">
+<title>初一道德与法治 · 七年级上册记忆卡</title>
+<style>
+  :root {
+    --paper: #f2f4f7;
+    --card: #fffefa;
+    --ink: #2b3138;
+    --muted: #7d8794;
+    --indigo: #3d5a80;
+    --jade: #4e8a5c;
+    --gold: #b8863b;
+    --terra: #a05252;
+    --line: #dae0e8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    padding-bottom: 88px;
+  }
+  h1, h2, h3, .serif { font-family: "Songti SC", "STSong", "SimSun", Georgia, serif; }
+
+  header {
+    background: linear-gradient(160deg, #2c4a6e, var(--indigo) 55%, #4a7ba6);
+    color: #f0f5fa;
+    text-align: center;
+    padding: 34px 18px 26px;
+    border-bottom: 4px solid var(--gold);
+  }
+  header .seal {
+    display: inline-block;
+    border: 2px solid rgba(240,245,250,.75);
+    border-radius: 10px;
+    padding: 14px 26px;
+    font-size: 26px;
+    letter-spacing: 8px;
+    font-weight: 700;
+  }
+  header .sub { margin-top: 10px; font-size: 13px; opacity: .85; letter-spacing: 2px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex;
+    background: rgba(242,244,247,.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav button {
+    flex: 1 0 auto;
+    border: none; background: none;
+    font: inherit; font-size: 15px;
+    padding: 13px 14px;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  nav button.on { color: var(--indigo); border-bottom-color: var(--indigo); font-weight: 600; }
+
+  main { max-width: 680px; margin: 0 auto; padding: 18px 14px 30px; }
+  .page { display: none; }
+  .page.on { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .tip {
+    background: #e8edf4;
+    border: 1px dashed var(--indigo);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #4a5a72;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- 知识路线 ---------- */
+  .era-title {
+    display: flex; align-items: center; gap: 10px;
+    margin: 26px 0 12px;
+    font-size: 17px; font-weight: 700;
+  }
+  .era-title .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .era-title .tag { font-size: 11px; color: #fff; border-radius: 6px; padding: 2px 8px; letter-spacing: 1px; }
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--line);
+  }
+  .node { position: relative; margin-bottom: 12px; }
+  .node::before {
+    content: ""; position: absolute; left: -25px; top: 16px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--paper); border: 3px solid var(--dotc, var(--indigo));
+  }
+  .node-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(40,60,90,.08);
+  }
+  .node-head {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+  }
+  .node-head .date {
+    font-size: 12px; font-weight: 700; white-space: nowrap;
+    color: var(--dotc, var(--indigo));
+    min-width: 52px;
+    font-family: Georgia, serif;
+  }
+  .node-head .t { font-weight: 600; font-size: 15.5px; }
+  .node-head .arrow { margin-left: auto; color: var(--muted); font-size: 12px; transition: transform .2s; }
+  .node.open .arrow { transform: rotate(90deg); }
+  .node-body { display: none; padding: 2px 14px 13px; border-top: 1px dashed var(--line); }
+  .node.open .node-body { display: block; }
+  .node-body li {
+    list-style: none;
+    font-size: 14px;
+    padding: 4px 0 4px 18px;
+    position: relative;
+    color: #3e4650;
+  }
+  .node-body li::before {
+    content: "·"; position: absolute; left: 6px;
+    color: var(--dotc, var(--indigo)); font-weight: 700;
+  }
+  .node-body .kw {
+    display: inline-block;
+    background: rgba(61,90,128,.1);
+    color: var(--indigo);
+    border-radius: 5px;
+    padding: 0 6px;
+    font-size: 13px;
+    margin: 2px 0;
+  }
+
+  /* ---------- 口诀 ---------- */
+  .rhyme {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--indigo);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .rhyme h3 { font-size: 15px; color: var(--indigo); margin-bottom: 6px; }
+  .rhyme .verse {
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    font-size: 16.5px;
+    letter-spacing: 1px;
+    color: var(--ink);
+    white-space: pre-line;
+  }
+  .rhyme .note { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  table.num { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card); border-radius: 10px; overflow: hidden; }
+  table.num th, table.num td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; }
+  table.num th { background: #e8edf4; font-size: 13px; color: #4a5a72; }
+  table.num td.d { font-family: Georgia, serif; font-weight: 700; color: var(--indigo); white-space: nowrap; }
+
+  /* ---------- 概念卡 ---------- */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 480px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  .flip { perspective: 800px; height: 118px; cursor: pointer; }
+  .flip .inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .35s;
+    transform-style: preserve-3d;
+  }
+  .flip.flipped .inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 8px; text-align: center;
+  }
+  .face.front {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--c, var(--indigo));
+  }
+  .face.front .name { font-family: "Songti SC", serif; font-size: 16.5px; font-weight: 700; }
+  .face.front .role { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .face.front .hint { font-size: 10px; color: #bfc8d2; margin-top: 6px; }
+  .face.back {
+    background: linear-gradient(150deg, var(--c, var(--indigo)), color-mix(in srgb, var(--c, var(--indigo)) 72%, black));
+    color: #f0f5fa;
+    transform: rotateY(180deg);
+    font-size: 12px;
+    line-height: 1.5;
+    overflow: hidden;
+  }
+  .face.back .tag { font-size: 14.5px; font-weight: 700; letter-spacing: 1px; }
+  .face.back .more { margin-top: 4px; opacity: .92; }
+
+  /* ---------- 随机自测 ---------- */
+  .quiz-card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 16px 18px;
+    box-shadow: 0 1px 3px rgba(40,60,90,.08);
+  }
+  .quiz-progress { font-size: 12px; color: var(--muted); margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .quiz-q { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    text-align: left; border: 1.5px solid var(--line); background: #fbfdfb;
+    border-radius: 10px; padding: 11px 12px; font: inherit; font-size: 14px;
+    cursor: pointer; display: flex; gap: 8px; align-items: flex-start; min-height: 40px; color: var(--ink);
+  }
+  .opt .idx { font-weight: 700; color: var(--indigo); }
+  .opt.correct { border-color: var(--jade); background: #edf5e8; }
+  .opt.wrong { border-color: #c0564d; background: #f9e9e7; }
+  .opt:disabled { cursor: default; }
+  .quiz-exp {
+    display: none; margin-top: 10px; font-size: 13px; color: #3e4650;
+    background: #edf5e8; border-left: 3px solid var(--jade); padding: 8px 10px; border-radius: 8px;
+  }
+  .quiz-next {
+    display: none; margin-top: 12px; width: 100%; border: none;
+    background: var(--indigo); color: #fff; font: inherit; font-size: 15px;
+    padding: 12px; border-radius: 10px; cursor: pointer;
+  }
+  .quiz-result { text-align: center; padding: 26px 10px; display: none; }
+  .quiz-score { font-size: 44px; font-weight: 800; color: var(--indigo); font-family: Georgia, serif; }
+  .quiz-result .msg { font-size: 14px; color: #3e4650; margin: 8px 0 16px; }
+  .quiz-result button {
+    border: 1.5px solid var(--indigo); background: #fbfdfb; color: var(--indigo);
+    font: inherit; font-size: 14px; padding: 10px 16px; border-radius: 10px; margin: 0 5px; cursor: pointer;
+  }
+  .quiz-result button.primary { background: var(--indigo); color: #fff; }
+
+  /* ---------- 怎么用 ---------- */
+  .method {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
+  }
+  .method h3 { font-size: 15.5px; color: var(--indigo); margin-bottom: 6px; }
+  .method p { font-size: 14px; color: #3e4650; }
+  .method .step { font-weight: 700; }
+
+  footer {
+    text-align: center; padding: 20px 16px 26px;
+    font-size: 12px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="seal serif">明德·修身</div>
+  <div class="sub">初一道德与法治 · 七年级上册 · 统编版（2024新版）· 睡前刷一刷</div>
+</header>
+
+<nav id="tabs">
+  <button class="on" data-page="route">🧭 知识路线</button>
+  <button data-page="rhyme">📜 口诀</button>
+  <button data-page="cards">🌿 概念卡</button>
+  <button data-page="quiz">🎯 随机自测</button>
+  <button data-page="howto">💡 怎么用</button>
+</nav>
+
+<main>
+  <!-- ============ 知识路线 ============ -->
+  <section class="page on" id="page-route">
+    <div class="tip">👆 点开每课查看考点要点。先从「少年有梦」顺到「追求美好人生」，再合上手机，把四个单元各讲一遍。</div>
+    <div id="route-box"></div>
+  </section>
+
+  <!-- ============ 口诀 ============ -->
+  <section class="page" id="page-rhyme">
+    <div class="tip">口诀先读顺、再抄一遍，比死背快得多。</div>
+
+    <div class="rhyme">
+      <h3>① 认识自我</h3>
+      <div class="verse">自评他评两途径，
+冷静分析有则改；
+接纳欣赏不自卑，
+扬长避短做更好。</div>
+      <div class="note">他人评价要重视但不盲从——"有则改之，无则加勉"。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>② 梦想与努力</h3>
+      <div class="verse">少年有梦不止步，
+与时代脉搏同频；
+努力架起连心桥，
+立志坚持有方法。</div>
+      <div class="note">答题金句：努力，是梦想与现实之间的桥梁。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>③ 家庭亲情</h3>
+      <div class="verse">家是身心寄居所，
+更是心灵避风港；
+孝亲敬长传美德，
+法定义务记心上。</div>
+      <div class="note">孝亲敬长既是<b>传统美德</b>，也是<b>法定义务</b>——两个"身份"都要答。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>④ 师生关系</h3>
+      <div class="verse">走近老师风格异，
+教学相长共进步；
+批评背后是爱护，
+珍惜情谊记心里。</div>
+      <div class="note">对待老师批评：把注意力放在<b>批评的内容和用意</b>上，理解老师的良苦用心。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑤ 友谊真谛</h3>
+      <div class="verse">平等双向亲密系，
+心灵相遇是真谛；
+竞争未必伤友谊，
+原则底线要守住。</div>
+      <div class="note">友谊不是一成不变的；呵护友谊要用心关怀、尊重对方、正确处理冲突。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑥ 集体生活</h3>
+      <div class="verse">集体生活成就我，
+涵养品格展个性；
+美好集体共建设，
+个人集体共成长。</div>
+      <div class="note">个人离不开集体，集体也离不开个人——双向奔赴。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑦ 敬畏生命</h3>
+      <div class="verse">生命来之不易，
+独特短暂不可逆；
+敬畏生命至上意，
+休戚与共记心里。</div>
+      <div class="note">答题金句：生命至上；我们对他人的生命怀有敬畏，彼此休戚与共。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑧ 安全自护</h3>
+      <div class="verse">遇险冷静先判断，
+机智求救拨电话；
+掌握急救护身体，
+安全意识时刻挂。</div>
+      <div class="note">常用应急电话：110（报警）、119（火警）、120（急救）。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑨ 身心健康</h3>
+      <div class="verse">爱护身体勤锻炼，
+规律作息不熬夜；
+滋养心灵会调适，
+有了烦恼找帮助。</div>
+      <div class="note">保持身心健康＝<b>爱护身体</b>＋<b>滋养心灵</b>，两手都要抓。</div>
+    </div>
+
+    <div class="rhyme">
+      <h3>⑩ 必背金句表（考场上值 10 分）</h3>
+      <table class="num">
+        <tr><th>关键词</th><th>一句话记</th></tr>
+        <tr><td class="d">家</td><td>身心寄居之所、心灵的港湾</td></tr>
+        <tr><td class="d">努力</td><td>梦想与现实之间的桥梁</td></tr>
+        <tr><td class="d">老师批评</td><td>关心、提醒和爱护</td></tr>
+        <tr><td class="d">友谊</td><td>一种亲密的关系、心灵的相遇</td></tr>
+        <tr><td class="d">生命</td><td>生命至上，彼此休戚与共</td></tr>
+        <tr><td class="d">劳动</td><td>一切财富的源泉、幸福的源泉</td></tr>
+        <tr><td class="d">集体</td><td>涵养品格、发展个性</td></tr>
+        <tr><td class="d">人生目标</td><td>与国家、民族的命运紧密相连</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 概念卡 ============ -->
+  <section class="page" id="page-cards">
+    <div class="tip">👇 先看概念猜答案，点卡片翻面对答案。全对的卡就跳过，只刷翻错的。</div>
+    <div id="cards-box"></div>
+  </section>
+
+  <!-- ============ 随机自测 ============ -->
+  <section class="page" id="page-quiz">
+    <div class="tip">每次题目顺序随机。选错不要紧，看一眼解析，记住就算赢。</div>
+    <div class="quiz-card" id="quiz-card"></div>
+  </section>
+
+  <!-- ============ 怎么用 ============ -->
+  <section class="page" id="page-howto">
+    <div class="method">
+      <h3>🌙 每晚 10 分钟：讲案例法</h3>
+      <p><span class="step">①</span> 打开知识路线，把今天学的课顺一遍（1 分钟）；<br>
+      <span class="step">②</span> 用一件身边小事，把这一课的观点讲给爸妈听（5 分钟）；<br>
+      <span class="step">③</span> 讲不出的地方，点开对应节点只看那一个（4 分钟）。</p>
+    </div>
+    <div class="method">
+      <h3>🃏 碎片时间：刷概念卡</h3>
+      <p>排队、坐车、课间，翻两轮概念卡。翻错的第二天再刷一遍——只跟"没记住的"较劲，不要从头背。</p>
+    </div>
+    <div class="method">
+      <h3>📅 周末 20 分钟：整体过线</h3>
+      <p>把知识路线从「开启初中生活」到「实现人生价值」完整讲一遍。哪一课讲不顺，就说明那里要补；再来一轮随机自测，正确率 15/18 以上就稳了。</p>
+    </div>
+    <div class="method">
+      <h3>✍️ 考试小提醒</h3>
+      <p>道法大题是<b>踩点给分</b>：先亮观点（关键词句），再结合材料（"材料中……体现了……"）。看到"怎么做"的题，分<b>主体</b>答：自己、家庭、学校、社会，一层一个点。</p>
+    </div>
+    <div class="tip" style="margin-top:4px">📱 建议用 Safari 打开后「分享 → 添加到主屏幕」，像 App 一样点开就刷。</div>
+  </section>
+</main>
+
+<footer>
+  统编版《道德与法治》七年级上册（2024新版） · 配合"睡前讲案例法"使用<br>
+  内容供复习参考，以课本和老师讲授为准
+</footer>
+
+<script>
+/* ================= 知识路线数据（统编版2024·四单元13课） ================= */
+var ERAS = [
+  { name: "第一单元 · 少年有梦", tag: "一单元", color: "#3d5a80", nodes: [
+    { date: "第1课", title: "开启初中生活", pts: ["中学时代：新的起点、新的机会与可能，也带来<b>新的挑战</b>", "初中生活为我们提供发展自我的多种机会（新课程、新集体、新社团）", "<b>规划初中生活</b>：确立目标＋落实行动，做自己的主人"] },
+    { date: "第2课", title: "正确认识自我", pts: ["认识自己很重要：促进自我发展、促进与他人交往", "途径：<b>自我评价</b>（观察、反省）和<b>他人评价</b>（冷静分析，不盲从）", "<b>做更好的自己</b>：接纳与欣赏自己、扬长避短、主动改正缺点、不断激发潜能"] },
+    { date: "第3课", title: "梦想始于当下", pts: ["少年梦想的特点：与<b>个人人生目标</b>紧密相连、与<b>时代脉搏</b>紧密相连（与中国梦密不可分）", "<b>努力</b>，是梦想与现实之间的桥梁", "努力需要：<b>立志、坚持、有方法</b>——把努力落实在每一天"] }
+  ]},
+  { name: "第二单元 · 成长的时空", tag: "二单元", color: "#4e8a5c", nodes: [
+    { date: "第4课", title: "幸福和睦的家庭", pts: ["家的意味：家是<b>身心寄居之所</b>，是<b>心灵的港湾</b>；家有亲情与关爱", "<b>孝亲敬长</b>：中华民族传统美德，也是<b>法定义务</b>", "让家更美好：现代家庭特点、学会与父母沟通、共建共享家庭氛围"] },
+    { date: "第5课", title: "和谐的师生关系", pts: ["走近老师：不同风格的老师都值得尊重", "<b>教学相长</b>：主动参与、勤学好问，与老师相互交流促进", "正确对待老师批评：把注意力放在<b>批评的内容和用意</b>上——批评是关心、提醒和爱护", "珍惜师生情谊：尊重、理解、平等相待"] },
+    { date: "第6课", title: "友谊之树常青", pts: ["友谊的特质：一种<b>亲密的关系</b>、<b>平等双向</b>的、<b>心灵的相遇</b>", "澄清友谊：竞争并不必然伤害友谊；友谊不是一成不变的；友谊不能没有原则", "建立友谊：开放自己、持续行动；<b>呵护友谊</b>：用心关怀、学会尊重、正确处理冲突"] },
+    { date: "第7课", title: "在集体中成长", pts: ["集体的力量：来源于成员共同的目标与团结协作", "<b>集体生活成就我</b>：涵养品格（学会交往与担当）、发展个性", "<b>共建美好集体</b>：共同确定愿景与规则，人人都是主人翁"] }
+  ]},
+  { name: "第三单元 · 珍爱我们的生命", tag: "三单元", color: "#b8863b", nodes: [
+    { date: "第8课", title: "生命可贵", pts: ["生命特点：<b>来之不易、独特的、不可逆的、短暂的</b>", "生命至上：生命价值高于一切", "<b>敬畏生命</b>：珍爱自己的生命，关怀他人的生命，彼此<b>休戚与共</b>"] },
+    { date: "第9课", title: "守护生命安全", pts: ["<b>增强安全意识</b>：识别危险情景，学习自救自护知识", "<b>提高防护能力</b>：遇险冷静判断、机智求救（110、119、120）", "掌握基本急救常识：止血包扎、心肺复苏（胸外按压）等"] },
+    { date: "第10课", title: "保持身心健康", pts: ["<b>爱护身体</b>：养成健康生活方式，规律作息、合理饮食、坚持锻炼", "<b>滋养心灵</b>：正确看待情绪，学会心理调适（倾诉、运动、转移注意）", "心理困扰别硬扛：主动<b>寻求专业帮助</b>不丢人"] }
+  ]},
+  { name: "第四单元 · 追求美好人生", tag: "四单元", color: "#a05252", nodes: [
+    { date: "第11课", title: "确立人生目标", pts: ["人生目标体现着生命的价值，指引人生方向", "<b>树立正确的人生目标</b>：与国家、民族的命运紧密相连，从自身实际出发"] },
+    { date: "第12课", title: "端正人生态度", pts: ["拥有<b>积极的人生态度</b>：乐观向上、认真务实", "<b>正确对待顺境与逆境</b>：顺境不骄、居安思危；逆境不馁、化危为机"] },
+    { date: "第13课", title: "实现人生价值", pts: ["<b>在劳动中创造人生价值</b>：劳动是一切财富的源泉、幸福的源泉", "<b>在奉献中成就精彩人生</b>：服务社会、关爱他人，青春当担当"] }
+  ]}
+];
+
+var box = document.getElementById("route-box");
+ERAS.forEach(function (era) {
+  var h = document.createElement("div");
+  h.className = "era-title";
+  h.innerHTML = '<span class="dot" style="background:' + era.color + '"></span>' +
+    '<span class="tag" style="background:' + era.color + '">' + era.tag + "</span>" +
+    '<span style="color:' + era.color + '">' + era.name + "</span>";
+  box.appendChild(h);
+  var tl = document.createElement("div");
+  tl.className = "timeline";
+  era.nodes.forEach(function (n) {
+    var d = document.createElement("div");
+    d.className = "node";
+    d.style.setProperty("--dotc", era.color);
+    d.innerHTML =
+      '<div class="node-card">' +
+        '<div class="node-head"><span class="date">' + n.date + '</span><span class="t">' + n.title + '</span><span class="arrow">▶</span></div>' +
+        '<div class="node-body"><ul>' + n.pts.map(function (p) { return "<li>" + p + "</li>"; }).join("") + "</ul></div>" +
+      "</div>";
+    d.querySelector(".node-head").addEventListener("click", function () { d.classList.toggle("open"); });
+    tl.appendChild(d);
+  });
+  box.appendChild(tl);
+});
+
+/* ================= 概念卡数据（4组20张） ================= */
+var CARDS = [
+  { g: "自我与梦想", color: "#3d5a80", list: [
+    { n: "认识自己的途径", r: "两条路", tag: "自评＋他评", more: "自我评价（观察反省）；他人评价（重视但不盲从，冷静分析）" },
+    { n: "做更好的自己", r: "怎么进步？", tag: "扬长避短", more: "接纳欣赏自己、主动改正缺点、不断激发潜能" },
+    { n: "少年梦想的特点", r: "与什么相连？", tag: "个人＋时代", more: "与个人人生目标紧密相连；与时代脉搏紧密相连（与中国梦密不可分）" },
+    { n: "努力", r: "梦想与现实之间", tag: "桥梁", more: "努力需要立志、坚持、有方法；把努力落实在每一天" },
+    { n: "规划初中生活", r: "新起点", tag: "目标＋行动", more: "确立目标、落实行动，做自己的主人" }
+  ]},
+  { g: "关系与集体", color: "#4e8a5c", list: [
+    { n: "家的意味", r: "家是什么？", tag: "身心寄居·心灵港湾", more: "家里有亲情之爱；孝亲敬长是传统美德＋法定义务" },
+    { n: "教学相长", r: "师生关系", tag: "互相促进", more: "主动参与、勤学好问；与老师交流互动、共享学习乐趣" },
+    { n: "友谊的特质", r: "三个关键词", tag: "亲密·平等双向·心灵相遇", more: "竞争并不必然伤害友谊；友谊不是一成不变的；友谊要有原则" },
+    { n: "呵护友谊", r: "怎么做？", tag: "关怀·尊重·解冲突", more: "用心关怀对方、学会尊重、正确处理冲突、学会承受友谊的挫折" },
+    { n: "集体生活成就我", r: "两大作用", tag: "涵养品格·发展个性", more: "学会交往与担当；包容他人、发展自己的个性" }
+  ]},
+  { g: "生命与安全", color: "#b8863b", list: [
+    { n: "生命的特点", r: "四个词", tag: "来之不易·独特", more: "独特的、不可逆的、短暂的；生命来之不易" },
+    { n: "敬畏生命", r: "态度", tag: "生命至上", more: "珍爱自己生命，关怀他人生命，彼此休戚与共" },
+    { n: "提高防护能力", r: "遇险怎么办", tag: "冷静·求救·急救", more: "冷静判断、机智求救（110/119/120）、掌握基本急救常识" },
+    { n: "爱护身体", r: "健康生活", tag: "作息·饮食·锻炼", more: "养成健康生活方式：规律作息、合理饮食、坚持锻炼" },
+    { n: "滋养心灵", r: "心理调适", tag: "情绪·求助", more: "正确看待情绪、学会调适（倾诉、运动、转移注意）；主动寻求专业帮助" }
+  ]},
+  { g: "态度与价值", color: "#a05252", list: [
+    { n: "人生目标", r: "方向标", tag: "与国家民族相连", more: "体现生命价值；从自身实际出发，把小我融入大我" },
+    { n: "积极人生态度", r: "两个词", tag: "乐观·认真", more: "乐观向上、认真务实，过积极的生活" },
+    { n: "顺境与逆境", r: "两种境遇", tag: "顺境不骄·逆境不馁", more: "顺境居安思危；逆境磨砺意志、化危为机" },
+    { n: "劳动", r: "价值的源泉", tag: "财富之源·幸福之源", more: "在劳动中创造人生价值；一切财富和幸福的源泉" },
+    { n: "实现人生价值", r: "两条路径", tag: "劳动创造·奉献成就", more: "在劳动中创造、在奉献中成就精彩人生：服务社会、关爱他人" }
+  ]}
+];
+
+var cbox = document.getElementById("cards-box");
+CARDS.forEach(function (group) {
+  var h = document.createElement("div");
+  h.className = "era-title";
+  h.innerHTML = '<span class="dot" style="background:' + group.color + '"></span>' +
+    '<span style="color:' + group.color + '">' + group.g + "</span>";
+  cbox.appendChild(h);
+  var grid = document.createElement("div");
+  grid.className = "grid";
+  group.list.forEach(function (p) {
+    var f = document.createElement("div");
+    f.className = "flip";
+    f.style.setProperty("--c", group.color);
+    f.innerHTML =
+      '<div class="inner">' +
+        '<div class="face front"><div class="name">' + p.n + '</div><div class="role">' + p.r + '</div><div class="hint">点我 翻面看考点</div></div>' +
+        '<div class="face back"><div class="tag">' + p.tag + '</div><div class="more">' + p.more + "</div></div>" +
+      "</div>";
+    f.addEventListener("click", function () { f.classList.toggle("flipped"); });
+    grid.appendChild(f);
+  });
+  cbox.appendChild(grid);
+});
+
+/* ================= 随机自测（18题） ================= */
+var QUIZ = [
+  { q: "初中生活的新起点意味着我们要学会？", opts: ["完全依赖父母", "主动规划自己的生活", "放弃娱乐只顾学习", "所有事都自己决定"], a: 1, exp: "中学时代是新的起点：主动规划、确立目标、落实行动，做自己的主人。" },
+  { q: "认识自己的重要途径包括？", opts: ["自我评价和他人评价", "照镜子和称体重", "考试排名", "网上测试"], a: 0, exp: "自我评价（观察、反省）＋他人评价（冷静分析、不盲从）。" },
+  { q: "面对他人的评价，正确的态度是？", opts: ["全部听信照做", "一概不理", "冷静分析，有则改之无则加勉", "只听夸奖的话"], a: 2, exp: "他人评价要重视，但要用理性的心态面对：有则改之，无则加勉。" },
+  { q: "做更好的自己，需要？", opts: ["只看自己的优点", "接纳与欣赏自己、扬长避短、激发潜能", "和别人处处攀比", "掩盖自己的缺点"], a: 1, exp: "接纳与欣赏自己、扬长避短、主动改正缺点、不断激发潜能。" },
+  { q: "少年梦想的重要特点是？", opts: ["与现实完全无关", "与个人人生目标和时代脉搏紧密相连", "只属于少数人", "想一想就能实现"], a: 1, exp: "少年的梦想与个人人生目标紧密相连，与时代脉搏紧密相连、与中国梦密不可分。" },
+  { q: "梦想与现实之间的桥梁是？", opts: ["运气", "等待", "努力", "天赋"], a: 2, exp: "努力，是梦想与现实之间的桥梁；努力需要立志、坚持、有方法。" },
+  { q: "「家是身心寄居之所、心灵的港湾」，这句话说明？", opts: ["家就是房子", "家中有亲情之爱，给人温暖与依靠", "家是吃饭的地方", "家不需要经营"], a: 1, exp: "家不只是房子，家中有亲人、有亲情，是身心寄居之所、心灵的港湾。" },
+  { q: "关于孝亲敬长，下列说法正确的是？", opts: ["长大了再说", "既是传统美德，也是法定义务", "只是道德提倡，可做可不做", "只有节假日才需要"], a: 1, exp: "孝亲敬长是中华民族的传统美德，也是每个公民的法定义务。" },
+  { q: "面对老师的批评，正确的做法是？", opts: ["当场顶撞老师", "把注意力放在批评的内容和用意上", "从此不理老师", "背后抱怨老师"], a: 1, exp: "老师的批评意味着关心、提醒和爱护，要理解老师的良苦用心。" },
+  { q: "下列关于友谊的说法，正确的是？", opts: ["竞争必然伤害友谊", "友谊是一成不变的", "友谊是一种亲密的关系，是平等双向的", "为朋友做什么都行"], a: 2, exp: "友谊是亲密的关系、平等双向、心灵的相遇；竞争不必然伤害友谊，友谊需要原则。" },
+  { q: "呵护友谊，我们应该？", opts: ["用心关怀、学会尊重、正确处理冲突", "对朋友百依百顺", "只在需要时联系", "替朋友做所有决定"], a: 0, exp: "呵护友谊需要用心关怀对方、尊重对方、正确处理冲突、学会承受友谊的挫折。" },
+  { q: "集体生活对我们的成长有哪些作用？", opts: ["涵养品格、发展个性", "限制自由发展", "让人失去个性", "只提供娱乐"], a: 0, exp: "集体生活成就我：涵养品格（学会交往与担当）、发展个性。" },
+  { q: "下列不是生命特点的是？", opts: ["生命来之不易", "生命是独特的", "生命可以重来", "生命是短暂的"], a: 2, exp: "生命的特点：来之不易、独特的、不可逆的、短暂的——生命不可逆，没有重来。" },
+  { q: "「我们对他人的生命怀有敬畏，彼此休戚与共」，体现了？", opts: ["生命至上", "生命互不相干", "只顾自己安全", "生命可以轻视"], a: 0, exp: "敬畏生命：生命至上；珍爱自己的生命，也关怀他人的生命，彼此休戚与共。" },
+  { q: "遇到火灾被困室内，正确的自救方法是？", opts: ["乘电梯快速逃生", "用湿毛巾捂住口鼻、低姿弯腰、走安全通道", "跳楼逃生", "躲在衣柜里不出声"], a: 1, exp: "火灾逃生：湿毛巾捂口鼻、低姿前行、走安全通道，不乘电梯；及时拨打119。" },
+  { q: "当心里有烦恼、情绪低落时，恰当的做法是？", opts: ["憋在心里不说", "向信任的人倾诉、运动调适，必要时寻求专业帮助", "对家人乱发脾气", "熬夜玩游戏麻痹自己"], a: 1, exp: "滋养心灵：正确看待情绪，学会心理调适；主动寻求帮助不丢人。" },
+  { q: "面对顺境，正确的态度是？", opts: ["居安思危、不骄不躁", "躺平享受", "狂妄自大", "与他人炫耀"], a: 0, exp: "顺境不骄：居安思危、戒骄戒躁；逆境不馁：磨砺意志、化危为机。" },
+  { q: "实现人生价值，需要？", opts: ["等待机遇从天而降", "在劳动中创造、在奉献中成就", "只为自己打算", "投机取巧走捷径"], a: 1, exp: "在劳动中创造人生价值（劳动是财富和幸福的源泉），在奉献中成就精彩人生。" }
+];
+
+var qCard = document.getElementById("quiz-card");
+var order = [], cur = 0, right = 0, wrongs = [];
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function startQuiz(pool) {
+  order = shuffle(pool);
+  cur = 0; right = 0; wrongs = [];
+  renderQ();
+}
+
+function renderQ() {
+  var qi = order[cur], item = QUIZ[qi];
+  var html = '<div class="quiz-progress"><span>第 ' + (cur + 1) + " / " + order.length + " 题</span><span>答对 " + right + "</span></div>" +
+    '<div class="quiz-q">' + item.q + "</div>" +
+    '<div class="quiz-opts">' +
+      item.opts.map(function (o, i) {
+        return '<button class="opt" data-i="' + i + '"><span class="idx">' + "ABCD"[i] + '.</span><span>' + o + "</span></button>";
+      }).join("") +
+    "</div>" +
+    '<div class="quiz-exp"></div>' +
+    '<button class="quiz-next">' + (cur === order.length - 1 ? "查看成绩 🏁" : "下一题 →") + "</button>";
+  qCard.innerHTML = html;
+  var opts = qCard.querySelectorAll(".opt");
+  opts.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (btn.disabled) return;
+      var i = parseInt(btn.getAttribute("data-i"), 10);
+      opts.forEach(function (b) { b.disabled = true; });
+      var ok = i === item.a;
+      if (ok) right++; else wrongs.push(qi);
+      opts[item.a].classList.add("correct");
+      if (!ok) btn.classList.add("wrong");
+      var exp = qCard.querySelector(".quiz-exp");
+      exp.style.display = "block";
+      exp.textContent = (ok ? "✓ 答对了！ " : "✗ 答错了～ ") + item.exp;
+      qCard.querySelector(".quiz-next").style.display = "block";
+    });
+  });
+  qCard.querySelector(".quiz-next").addEventListener("click", function () {
+    cur++;
+    if (cur < order.length) renderQ(); else showResult();
+  });
+}
+
+function showResult() {
+  var pct = Math.round(right / order.length * 100);
+  var msg = pct === 100 ? "满分！明德修身，你就是自己的小榜样 🌟" :
+    pct >= 80 ? "很棒啦，再刷一轮错题就完美 ✨" :
+    pct >= 60 ? "及格了！把错题里的金句再念两遍 📖" : "别灰心，先去看知识路线，再来一次 💪";
+  var html = '<div class="quiz-result" style="display:block">' +
+    '<div class="quiz-score">' + right + " / " + order.length + "</div>" +
+    '<div class="msg">' + msg + "</div>" +
+    '<button class="primary" id="q-restart">再来一遍</button>' +
+    (wrongs.length ? '<button id="q-wrong">只刷错题（' + wrongs.length + "道）</button>" : "") +
+    "</div>";
+  qCard.innerHTML = html;
+  qCard.querySelector("#q-restart").addEventListener("click", function () { startQuiz(QUIZ.map(function (_, i) { return i; })); });
+  var wBtn = qCard.querySelector("#q-wrong");
+  if (wBtn) wBtn.addEventListener("click", function () { startQuiz(wrongs.slice()); });
+}
+
+startQuiz(QUIZ.map(function (_, i) { return i; }));
+
+/* ================= Tab 切换 ================= */
+var tabs = document.querySelectorAll("#tabs button");
+tabs.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    tabs.forEach(function (b) { b.classList.remove("on"); });
+    btn.classList.add("on");
+    document.querySelectorAll(".page").forEach(function (p) { p.classList.remove("on"); });
+    document.getElementById("page-" + btn.dataset.page).classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+</script>
+</body>
+</html>
